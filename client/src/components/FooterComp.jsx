@@ -12,7 +12,7 @@ import {
 
 const FooterComp = () => {
 	return (
-		<Footer container className="border border-t-8 border-teal-800">
+		<Footer container className="border border-t-8 border-teal-800 dark:bg-[#121416]">
 			<div className="w-full max-w-7xl mx-auto">
 				<div className="flex flex-col items-center gap-8 w-full sm:flex-row sm:justify-between">
 					<div className="mt-4 sm:mt-0">

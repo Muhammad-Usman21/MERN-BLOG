@@ -83,9 +83,9 @@ const SignIn = () => {
 							/>
 						</div>
 						<Button
-							gradientDuoTone="purpleToPink"
+							gradientDuoTone="purpleToBlue"
 							type="submit"
-							className="uppercase"
+							className="uppercase focus:ring-1"
 							disabled={loading}>
 							{loading ? (
 								<>

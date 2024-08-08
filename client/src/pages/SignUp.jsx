@@ -90,7 +90,7 @@ const SignUp = () => {
 						<Button
 							gradientDuoTone="purpleToPink"
 							type="submit"
-							className="uppercase"
+							className="uppercase focus:ring-1"
 							disabled={loading}>
 							{loading ? (
 								<>
