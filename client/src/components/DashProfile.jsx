@@ -80,7 +80,7 @@ const DashProfile = () => {
 	// }
 
 	return (
-		<div className="max-w-lg mx-auto p-3 w-full">
+		<div className="max-w-md mx-auto p-3 w-full">
 			<h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
 			<form className="flex flex-col gap-4">
 				<input

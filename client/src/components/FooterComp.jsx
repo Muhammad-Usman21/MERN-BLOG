@@ -9,14 +9,17 @@ import {
 	BsLinkedin,
 	BsDiscord,
 } from "react-icons/bs";
+import { HoverBorder } from "./extra/HoverBorder";
 
 const FooterComp = () => {
 	return (
-		<Footer container className="border border-t-8 border-teal-800 dark:bg-[#121416]">
+		<Footer
+			container
+			className="border border-t-8 border-teal-800 dark:bg-[#121416]">
 			<div className="w-full max-w-7xl mx-auto">
 				<div className="flex flex-col items-center gap-8 w-full sm:flex-row sm:justify-between">
 					<div className="mt-4 sm:mt-0">
-						<Link
+						{/* <Link
 							to="/"
 							className="self-center whitespace-nowrap font-semibold dark:text-white text-2xl">
 							<span
@@ -25,6 +28,12 @@ const FooterComp = () => {
 								{"Usman's"}
 							</span>
 							Blog
+						</Link> */}
+						<Link
+							to="/"
+							className="font-semibold dark:text-white text-xl flex items-center">
+							<HoverBorder>{"Usman's"}</HoverBorder>
+							<span className="ml-2 text-3xl">Blog</span>
 						</Link>
 					</div>
 					<div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-8 mt-4 sm:mt-0">

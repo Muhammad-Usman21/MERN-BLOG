@@ -37,15 +37,17 @@ const OAuth = () => {
 	};
 
 	return (
-		<Button
-			type="button"
-			gradientDuoTone="pinkToOrange"
-			outline
-			onClick={handleGoogleClick}
-			className="focus:ring-1">
-			<AiFillGoogleCircle className="w-6 h-6 mr-2" />
-			Continue with Google
-		</Button>
+		<>
+			<Button
+				type="button"
+				gradientDuoTone="pinkToOrange"
+				outline
+				onClick={handleGoogleClick}
+				className="focus:ring-1 animate-shimmer">
+				<AiFillGoogleCircle className="w-6 h-6 mr-2" />
+				Continue with Google
+			</Button>
+		</>
 	);
 };
 
