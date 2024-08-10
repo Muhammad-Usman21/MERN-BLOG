@@ -39,9 +39,9 @@ export const signup = async (req, res, next) => {
 		return next(errorHandler(400, "Password must be atleast 8 characters!"));
 	} else if (
 		!(
-			password.match(/^[a-z]+$/) &&
-			password.match(/^[A-Z]+$/) &&
-			password.match(/^[0-9]+$/)
+			/[a-z]/.test(password) &&
+			/[A-Z]/.test(password) &&
+			/[0-9]/.test(password)
 		)
 	) {
 		return next(
@@ -79,22 +79,25 @@ export const signup = async (req, res, next) => {
 };
 
 export const signin = async (req, res, next) => {
-	const { email, password } = req.body;
+	const { userInfo, password } = req.body;
 
-	if (!email || !password || email === "" || password === "") {
-		return next(errorHandler(400, "All fields are required"));
+	if (!userInfo || !password || userInfo === "" || password === "") {
+		return next(errorHandler(400, "All fields are required!"));
 	}
 
 	try {
-		const validUser = await User.findOne({ email });
+		const validUser = await User.findOne({
+			$or: [{ email: userInfo }, { username: userInfo }],
+		});
+
 		if (!validUser) {
-			return next(errorHandler(404, "User not found"));
+			return next(errorHandler(404, "Oops! User not found."));
 		}
+
 		const validPassword = bcryptjs.compareSync(password, validUser.password);
 		if (!validPassword) {
-			return next(errorHandler(400, "Invalid password"));
+			return next(errorHandler(400, "Invalid password. Try again!"));
 		}
-		const { password: pass, ...restInfo } = validUser._doc;
 
 		const token = jwt.sign(
 			{
@@ -103,6 +106,7 @@ export const signin = async (req, res, next) => {
 			process.env.JWT_SECRET
 		);
 
+		const { password: pass, ...restInfo } = validUser._doc;
 		res
 			.status(200)
 			.cookie("access_token", token, {
