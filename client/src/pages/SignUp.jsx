@@ -3,23 +3,36 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import { HoverBorder } from "../components/extra/HoverBorder";
+import { BiSolidShow, BiSolidHide } from "react-icons/bi";
+import { MdCancelPresentation } from "react-icons/md";
 
 const SignUp = () => {
 	const [formData, setFormData] = useState({});
-	const [errorMessage, setErrorMessage] = useState(null);
 	const [loading, setLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState(null);
+	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
 
 	const handleChange = (e) => {
 		// console.log(e.target.value);
-		setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+		setLoading(false);
+		setErrorMessage(null);
+		setFormData({ ...formData, [e.target.id]: e.target.value });
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (!formData.username || !formData.email || !formData.password) {
-			return setErrorMessage("Please fill out all fields");
+		if (
+			!formData.username ||
+			!formData.email ||
+			!formData.password ||
+			!formData.confirmPassword
+		) {
+			return setErrorMessage("All fields are required");
+		} else if (formData.password !== formData.confirmPassword) {
+			return setErrorMessage("Your password is'nt same. Check again!");
 		}
+
 		try {
 			setLoading(true);
 			setErrorMessage(null);
@@ -30,10 +43,12 @@ const SignUp = () => {
 			});
 			const data = await res.json();
 			if (data.success === false) {
-				return setErrorMessage(data.message);
+				setErrorMessage(data.message);
+				setLoading(false);
+				return;
 			}
-			setLoading(false);
 			if (res.ok) {
+				setLoading(false);
 				navigate("/sign-in");
 			}
 		} catch (error) {
@@ -46,14 +61,6 @@ const SignUp = () => {
 		<div className="min-h-screen mt-20">
 			<div className="flex p-3 max-w-3xl md:mx-auto flex-col md:flex-row md:items-center gap-10 mx-5 sm:mx-12">
 				<div className="flex-1">
-					{/* <Link to="/" className="font-bold dark:text-white text-4xl">
-						<span
-							className="px-2 py-1 bg-gradient-to-r from-indigo-500 
-                    via-purple-500 to-pink-500 rounded-lg text-white">
-							{"Usman's"}
-						</span>
-						Blog
-					</Link> */}
 					<Link
 						to="/"
 						className="font-semibold dark:text-white text-3xl flex items-center">
@@ -87,18 +94,38 @@ const SignUp = () => {
 						</div>
 						<div>
 							<Label value="Your password" />
+							<div className="flex items-center gap-1">
+								<TextInput
+									type={showPassword ? "text" : "password"}
+									placeholder="Password"
+									id="password"
+									onChange={handleChange}
+									className="flex-auto"
+								/>
+								<Button
+									className="w-10 h-10 focus:ring-1 items-center rounded-lg"
+									color="gray"
+									pill
+									onMouseEnter={() => setShowPassword(true)}
+									onMouseLeave={() => setShowPassword(false)}>
+									{showPassword ? <BiSolidShow /> : <BiSolidHide />}
+								</Button>
+							</div>
+						</div>
+						<div>
+							<Label value="Confirm password" />
 							<TextInput
 								type="password"
-								placeholder="Password"
-								id="password"
+								placeholder="Confirm Password"
+								id="confirmPassword"
 								onChange={handleChange}
 							/>
 						</div>
 						<Button
 							gradientDuoTone="purpleToPink"
 							type="submit"
-							className="uppercase focus:ring-1"
-							disabled={loading}>
+							className="uppercase focus:ring-1 mt-1"
+							disabled={loading || errorMessage}>
 							{loading ? (
 								<>
 									<Spinner size="sm" />
@@ -117,9 +144,19 @@ const SignUp = () => {
 						</Link>
 					</div>
 					{errorMessage && (
-						<Alert className="mt-4" color="failure">
-							{errorMessage}
-						</Alert>
+						<div className="flex items-center gap-1 mt-4">
+							<Alert className="flex-auto" color="failure" withBorderAccent>
+								<div className="flex gap-2">
+									<span className="">{errorMessage}</span>
+									<span className="w-5 h-5">
+										<MdCancelPresentation
+											className="cursor-pointer w-6 h-6"
+											onClick={() => setErrorMessage(null)}
+										/>
+									</span>
+								</div>
+							</Alert>
+						</div>
 					)}
 				</div>
 			</div>

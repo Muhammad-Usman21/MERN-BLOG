@@ -7,14 +7,11 @@ export const signup = async (req, res, next) => {
 	// console.log(req.body);
 	const { username, email, password, confirmPassword } = req.body;
 
-	if (
-		!username ||
-		!email ||
-		!password ||
-		username === "" ||
-		email === "" ||
-		password === ""
-	) {
+	if (password !== confirmPassword) {
+		return next(errorHandler(400, "Your password is'nt same. Check again!"));
+	}
+
+	if (!username || !email || !password || !confirmPassword) {
 		return next(errorHandler(400, "All fields are required"));
 	}
 
@@ -33,7 +30,7 @@ export const signup = async (req, res, next) => {
 	}
 
 	if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-		return next(errorHandler(400, "Enter a valid email (example@example.com)"));
+		return next(errorHandler(400, "Enter a valid email (name@company.com)"));
 	} else if (email !== email.toLowerCase()) {
 		return next(errorHandler(400, "Email must be lowercase!"));
 	}
@@ -53,10 +50,6 @@ export const signup = async (req, res, next) => {
 				"The password must contain numbers, and also both uppercase and lowercase letters.\nAnd some special characters are recommended too!"
 			)
 		);
-	}
-
-	if (password !== confirmPassword) {
-		return next(errorHandler(400, "Your password is'nt same. Check again!"));
 	}
 
 	const checkUsername = await User.findOne({ username });
