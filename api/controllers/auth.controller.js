@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
 	// console.log(req.body);
-	const { username, email, password } = req.body;
+	const { username, email, password, confirmPassword } = req.body;
 
 	if (
 		!username ||
@@ -18,6 +18,57 @@ export const signup = async (req, res, next) => {
 		return next(errorHandler(400, "All fields are required"));
 	}
 
+	if (username.includes(" ")) {
+		return next(errorHandler(400, "Username cannot contains spaces!"));
+	} else if (username !== username.toLowerCase()) {
+		return next(errorHandler(400, "Username must be lowercase!"));
+	} else if (username.length < 5 || username.length > 20) {
+		return next(
+			errorHandler(400, "Username must be between 5 to 20 characters!")
+		);
+	} else if (!username.match(/^[a-z0-9]+$/)) {
+		return next(
+			errorHandler(400, "Username can only contains letters and numbers!")
+		);
+	}
+
+	if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+		return next(errorHandler(400, "Enter a valid email (example@example.com)"));
+	} else if (email !== email.toLowerCase()) {
+		return next(errorHandler(400, "Email must be lowercase!"));
+	}
+
+	if (password.length < 9) {
+		return next(errorHandler(400, "Password must be atleast 8 characters!"));
+	} else if (
+		!(
+			password.match(/^[a-z]+$/) &&
+			password.match(/^[A-Z]+$/) &&
+			password.match(/^[0-9]+$/)
+		)
+	) {
+		return next(
+			errorHandler(
+				400,
+				"The password must contain numbers, and also both uppercase and lowercase letters.\nAnd some special characters are recommended too!"
+			)
+		);
+	}
+
+	if (password !== confirmPassword) {
+		return next(errorHandler(400, "Your password is'nt same. Check again!"));
+	}
+
+	const checkUsername = await User.findOne({ username });
+	if (checkUsername) {
+		return next(errorHandler(400, "Username already taken. Try another one!"));
+	}
+
+	const checkEmail = await User.findOne({ email });
+	if (checkEmail) {
+		return next(errorHandler(400, "Email already exists. Try another one!"));
+	}
+
 	const hashedPassword = bcryptjs.hashSync(password, 10);
 
 	const newUser = new User({
@@ -28,7 +79,7 @@ export const signup = async (req, res, next) => {
 
 	try {
 		await newUser.save();
-		res.json("SignUp successfull");
+		res.status(201).json("User created successfully");
 	} catch (error) {
 		next(error);
 	}
