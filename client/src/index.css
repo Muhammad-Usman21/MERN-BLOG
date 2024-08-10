@@ -6,6 +6,3 @@
 	object-fit: cover;
 }
 
-[data-testid="flowbite-alert-wrapper"] {
-	justify-content: space-around;
-}

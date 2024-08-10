@@ -1,33 +1,34 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-	signInStart,
-	signInSuccess,
-	signInFailure,
-} from "../redux/user/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { signInSuccess } from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
 import OAuth from "../components/OAuth";
 import { HoverBorder } from "../components/extra/HoverBorder";
+import { MdCancelPresentation } from "react-icons/md";
 
 const SignIn = () => {
 	const [formData, setFormData] = useState({});
-	const { loading, error: errorMessage } = useSelector((state) => state.user);
+	const [loading, setLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState(null);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	const handleChange = (e) => {
 		// console.log(e.target.value);
-		setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+		setLoading(false);
+		setErrorMessage(null);
+		setFormData({ ...formData, [e.target.id]: e.target.value });
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (!formData.email || !formData.password) {
-			return dispatch(signInFailure("Please fill out all fields"));
+		if (!formData.userInfo || !formData.password) {
+			return setErrorMessage("All fields are required!");
 		}
 		try {
-			dispatch(signInStart());
+			setLoading(true);
+			setErrorMessage(null);
 			const res = await fetch("/api/auth/signin", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
@@ -35,14 +36,18 @@ const SignIn = () => {
 			});
 			const data = await res.json();
 			if (data.success === false) {
-				return dispatch(signInFailure(data.message));
+				setLoading(false);
+				setErrorMessage(data.message);
+				return;
 			}
 			if (res.ok) {
+				setLoading(false);
 				dispatch(signInSuccess(data));
 				navigate("/");
 			}
 		} catch (error) {
-			dispatch(signInFailure(error.message));
+			setErrorMessage(error.message);
+			setLoading(false);
 		}
 	};
 
@@ -50,14 +55,6 @@ const SignIn = () => {
 		<div className="min-h-screen mt-20">
 			<div className="flex p-3 max-w-3xl md:mx-auto flex-col md:flex-row md:items-center gap-10 mx-5 sm:mx-12">
 				<div className="flex-1">
-					{/* <Link to="/" className="font-bold dark:text-white text-4xl">
-						<span
-							className="px-2 py-1 bg-gradient-to-r from-indigo-500 
-                    via-purple-500 to-pink-500 rounded-lg text-white">
-							{"Usman's"}
-						</span>
-						Blog
-					</Link> */}
 					<Link
 						to="/"
 						className="font-semibold dark:text-white text-3xl flex items-center">
@@ -72,11 +69,11 @@ const SignIn = () => {
 				<div className="flex-1 pt-5 border-t-2 md:pt-0 md:border-t-0 md:pl-5 md:border-l-2">
 					<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
 						<div>
-							<Label value="Your email" />
+							<Label value="Sign in with username or email" />
 							<TextInput
-								type="email"
-								placeholder="name@company.com"
-								id="email"
+								type="text"
+								placeholder="Username or Email"
+								id="userInfo"
 								onChange={handleChange}
 							/>
 						</div>
@@ -92,8 +89,8 @@ const SignIn = () => {
 						<Button
 							gradientDuoTone="purpleToBlue"
 							type="submit"
-							className="uppercase focus:ring-1"
-							disabled={loading}>
+							className="uppercase focus:ring-1 mt-1"
+							disabled={loading || errorMessage}>
 							{loading ? (
 								<>
 									<Spinner size="sm" />
@@ -112,9 +109,19 @@ const SignIn = () => {
 						</Link>
 					</div>
 					{errorMessage && (
-						<Alert className="mt-4" color="failure">
-							{errorMessage}
-						</Alert>
+						<div className="flex items-center gap-1 mt-4">
+							<Alert className="flex-auto" color="failure" withBorderAccent>
+								<div className="flex gap-3">
+									<span className="w-5 h-5">
+										<MdCancelPresentation
+											className="cursor-pointer w-6 h-6"
+											onClick={() => setErrorMessage(null)}
+										/>
+									</span>
+									<span>{errorMessage}</span>
+								</div>
+							</Alert>
+						</div>
 					)}
 				</div>
 			</div>

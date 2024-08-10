@@ -28,7 +28,7 @@ const SignUp = () => {
 			!formData.password ||
 			!formData.confirmPassword
 		) {
-			return setErrorMessage("All fields are required");
+			return setErrorMessage("All fields are required!");
 		} else if (formData.password !== formData.confirmPassword) {
 			return setErrorMessage("Your password is'nt same. Check again!");
 		}
@@ -105,7 +105,6 @@ const SignUp = () => {
 								<Button
 									className="w-10 h-10 focus:ring-1 items-center rounded-lg"
 									color="gray"
-									pill
 									onMouseEnter={() => setShowPassword(true)}
 									onMouseLeave={() => setShowPassword(false)}>
 									{showPassword ? <BiSolidShow /> : <BiSolidHide />}
@@ -122,7 +121,7 @@ const SignUp = () => {
 							/>
 						</div>
 						<Button
-							gradientDuoTone="purpleToPink"
+							gradientDuoTone="purpleToBlue"
 							type="submit"
 							className="uppercase focus:ring-1 mt-1"
 							disabled={loading || errorMessage}>
@@ -146,14 +145,14 @@ const SignUp = () => {
 					{errorMessage && (
 						<div className="flex items-center gap-1 mt-4">
 							<Alert className="flex-auto" color="failure" withBorderAccent>
-								<div className="flex gap-2">
-									<span className="">{errorMessage}</span>
+								<div className="flex gap-3">
 									<span className="w-5 h-5">
 										<MdCancelPresentation
 											className="cursor-pointer w-6 h-6"
 											onClick={() => setErrorMessage(null)}
 										/>
 									</span>
+									<span>{errorMessage}</span>
 								</div>
 							</Alert>
 						</div>
