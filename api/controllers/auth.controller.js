@@ -8,7 +8,7 @@ export const signup = async (req, res, next) => {
 	const { username, email, password, confirmPassword } = req.body;
 
 	if (password !== confirmPassword) {
-		return next(errorHandler(400, "Your password is'nt same. Check again!"));
+		return next(errorHandler(400, "Your password isn't same. Try again!"));
 	}
 
 	if (!username || !email || !password || !confirmPassword) {
@@ -17,13 +17,16 @@ export const signup = async (req, res, next) => {
 
 	if (username.includes(" ")) {
 		return next(errorHandler(400, "Username cannot contains spaces!"));
-	} else if (username !== username.toLowerCase()) {
+	}
+	if (username !== username.toLowerCase()) {
 		return next(errorHandler(400, "Username must be lowercase!"));
-	} else if (username.length < 5 || username.length > 20) {
+	}
+	if (username.length < 5 || username.length > 30) {
 		return next(
-			errorHandler(400, "Username must be between 5 to 20 characters!")
+			errorHandler(400, "Username must be between 5 to 30 characters!")
 		);
-	} else if (!username.match(/^[a-z0-9]+$/)) {
+	}
+	if (!username.match(/^[a-z0-9]+$/)) {
 		return next(
 			errorHandler(400, "Username can only contains letters and numbers!")
 		);
@@ -31,13 +34,15 @@ export const signup = async (req, res, next) => {
 
 	if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
 		return next(errorHandler(400, "Enter a valid email (name@company.com)"));
-	} else if (email !== email.toLowerCase()) {
+	}
+	if (email !== email.toLowerCase()) {
 		return next(errorHandler(400, "Email must be lowercase!"));
 	}
 
-	if (password.length < 9) {
+	if (password.length < 8) {
 		return next(errorHandler(400, "Password must be atleast 8 characters!"));
-	} else if (
+	}
+	if (
 		!(
 			/[a-z]/.test(password) &&
 			/[A-Z]/.test(password) &&
@@ -137,13 +142,16 @@ export const google = async (req, res, next) => {
 			const newUser = new User({
 				username:
 					name.toLowerCase().split(" ").join("") +
-					Math.random().toString(9).slice(-4),
+					Math.random().toString(9).slice(-5),
 				email,
 				password: hashedPassword,
 				profilePicture: googlePhotoUrl,
+				googleAuth: true,
 			});
 			await newUser.save();
 			const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+			const { password, ...restInfo } = newUser._doc;
+
 			res
 				.status(200)
 				.cookie("access_token", token, {

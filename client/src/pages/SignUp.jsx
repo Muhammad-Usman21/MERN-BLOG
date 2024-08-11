@@ -17,7 +17,11 @@ const SignUp = () => {
 		// console.log(e.target.value);
 		setLoading(false);
 		setErrorMessage(null);
-		setFormData({ ...formData, [e.target.id]: e.target.value });
+		// setFormData({ ...formData, [e.target.id]: e.target.value });
+		setFormData((prevFormData) => ({
+			...prevFormData,
+			[e.target.id]: e.target.value,
+		}));
 	};
 
 	const handleSubmit = async (e) => {
@@ -30,7 +34,7 @@ const SignUp = () => {
 		) {
 			return setErrorMessage("All fields are required!");
 		} else if (formData.password !== formData.confirmPassword) {
-			return setErrorMessage("Your password is'nt same. Check again!");
+			return setErrorMessage("Your password isn't same. Try again!");
 		}
 
 		try {

@@ -11,45 +11,112 @@ export const updateUser = async (req, res, next) => {
 	if (req.user.id !== req.params.userId) {
 		return next(errorHandler(403, "You are not allowed to update this user"));
 	}
-	if (req.body.password) {
-		if (req.body.password.length < 6) {
-			return next(errorHandler(400, "Password must be atleast 6 characters"));
-		}
-		req.body.password = bcryptjs.hashSync(req.body.password, 10);
+
+	let hashedPassword, isGoogleAuth;
+	const {
+		username,
+		email,
+		currentPassword,
+		password,
+		confirmPassword,
+		profilePicture,
+		forgetPassword,
+	} = req.body;
+
+	const validUser = await User.findById(req.params.userId);
+	if (!validUser) {
+		return next(errorHandler(404, "Oops! User not found."));
 	}
 
-	if (req.body.username) {
-		if (req.body.username.lenght < 7 || req.body.username.lenght > 20) {
+	if (!validUser.googleAuth && !forgetPassword) {
+		if (!currentPassword || currentPassword === "") {
 			return next(
-				errorHandler(400, "Username must be between 7 and 20 characters")
+				errorHandler(
+					400,
+					"Enter your current password for update your profile."
+				)
+			);
+		} else {
+			const validPassword = bcryptjs.compareSync(
+				currentPassword,
+				validUser.password
+			);
+			if (!validPassword) {
+				return next(errorHandler(400, "Invalid password. Try again!"));
+			}
+		}
+	}
+
+	if (password || password === "") {
+		if (password !== confirmPassword) {
+			return next(errorHandler(400, "Your password isn't same. Try again!"));
+		}
+		if (password.length < 8) {
+			return next(errorHandler(400, "Password must be atleast 8 characters!"));
+		}
+		if (
+			!(
+				/[a-z]/.test(password) &&
+				/[A-Z]/.test(password) &&
+				/[0-9]/.test(password)
+			)
+		) {
+			return next(
+				errorHandler(
+					400,
+					"The password must contain numbers, and also both uppercase and lowercase letters.\nAnd some special characters are recommended too!"
+				)
 			);
 		}
-		if (req.body.username.includes(" ")) {
-			return next(errorHandler(400, "Username cannot contains spaces"));
+
+		hashedPassword = bcryptjs.hashSync(password, 10);
+		isGoogleAuth = false;
+	}
+
+	if (username || username === "") {
+		if (username.includes(" ")) {
+			return next(errorHandler(400, "Username cannot contains spaces!"));
 		}
-		if (req.body.username !== req.body.username.toLowerCase()) {
-			return next(errorHandler(400, "Username must be lowercase"));
+		if (username !== username.toLowerCase()) {
+			return next(errorHandler(400, "Username must be lowercase!"));
 		}
-		if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
+		if (username.length < 5 || username.length > 30) {
 			return next(
-				errorHandler(400, "Username can only contains letters and numbers")
+				errorHandler(400, "Username must be between 5 to 30 characters!")
+			);
+		}
+		if (!username.match(/^[a-z0-9]+$/)) {
+			return next(
+				errorHandler(400, "Username can only contains letters and numbers!")
 			);
 		}
 	}
+
+	if (email || email === "") {
+		if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+			return next(errorHandler(400, "Enter a valid email (name@company.com)"));
+		}
+		if (email !== email.toLowerCase()) {
+			return next(errorHandler(400, "Email must be lowercase!"));
+		}
+	}
+
 	try {
 		const updatedUser = await User.findByIdAndUpdate(
 			req.params.userId,
 			{
 				$set: {
-					username: req.body.username,
-					email: req.body.email,
-					password: req.body.password,
-					profilePicture: req.body.profilePicture,
+					username,
+					email,
+					password: hashedPassword,
+					googleAuth: isGoogleAuth,
+					profilePicture,
 				},
 			},
 			{ new: true }
 		);
-		const { password, ...restInfo } = updatedUser._doc;
+
+		const { password: pass, ...restInfo } = updatedUser._doc;
 		res.status(200).json(restInfo);
 	} catch (error) {
 		next(error);

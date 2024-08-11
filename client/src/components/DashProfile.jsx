@@ -1,4 +1,4 @@
-import { Alert, Button, Modal, TextInput } from "flowbite-react";
+import { Alert, Button, Modal, Spinner, TextInput } from "flowbite-react";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -12,36 +12,55 @@ import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import {
-	updateStart,
-	updateSuccess,
-	updateFailure,
-	deleteStart,
-	deleteSuccess,
-	deleteFailure,
-	signoutSuccess,
+	updateUserSuccess,
+	deleteUserSuccess,
+	signOutSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { MdCancelPresentation } from "react-icons/md";
+import { BiSolidHide, BiSolidShow } from "react-icons/bi";
 
 const DashProfile = () => {
-	const { currentUser, error } = useSelector((state) => state.user);
+	const { currentUser } = useSelector((state) => state.user);
 	const [imageFile, setImageFile] = useState(null);
 	const [imageFileUrl, setImageFileUrl] = useState(null);
-	const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
-	const [imageFileUploadError, setImageFileUploadError] = useState(null);
+	// const [imageFileErrorMsg, setImageFileErrorMsg] = useState(null);
+	// const [imageFileSuccessMsg, setImageFileSuccessMsg] = useState(null);
 	const [imageFileUploading, setImageFileUploading] = useState(false);
-	const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
-	const [updateUserError, setUpdateUserError] = useState(null);
-	const filePickerRef = useRef();
+	const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
+	// const [updateUserErrorMsg, setUpdateUserErrorMsg] = useState(null);
+	// const [updateUserSuccessMsg, setUpdateUserSuccessMsg] = useState(null);
+	const [updateUserLoading, setUpdateUserLoading] = useState(false);
+	// const [deleteUserErrorMsg, setDeleteUserErrorMsg] = useState(null);
+	// const [signOutErrorMsg, setSignOutErrorMsg] = useState(null);
 	const [formData, setFormData] = useState({});
+	const filePickerRef = useRef();
 	const dispatch = useDispatch();
 	const [showModal, setShowModal] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
+	const [forgetPassword, setForgetPassword] = useState(false);
+	const [myMessages, setMyMessages] = useState({
+		updateUserErrorMsg: null,
+		updateUserSuccessMsg: null,
+		deleteUserErrorMsg: null,
+		signOutErrorMsg: null,
+		imageFileErrorMsg: null,
+		imageFileSuccessMsg: null,
+	});
 
 	const handleImageChange = (e) => {
+		setMyMessages((prevMessages) => ({
+			...prevMessages,
+			imageFileErrorMsg: null,
+			imageFileSuccessMsg: null,
+			updateUserErrorMsg: null,
+			updateUserSuccessMsg: null,
+		}));
+
 		const file = e.target.files[0];
 		if (file) {
 			setImageFile(file);
-			setImageFileUrl(URL.createObjectURL(file));
 		}
 	};
 
@@ -49,13 +68,35 @@ const DashProfile = () => {
 
 	useEffect(() => {
 		if (imageFile) {
+			setImageFileUploading(true);
+			setImageFileUploadProgress(null);
+
+			if (!imageFile.type.includes("image/")) {
+				setImageFile(null);
+				setImageFileUploading(false);
+				setMyMessages((prevMessages) => ({
+					...prevMessages,
+					imageFileErrorMsg:
+						"File type isn't image.\nPlease select an image file.",
+				}));
+				return;
+			}
+			if (imageFile.size >= 2 * 1024 * 1024) {
+				setImageFile(null);
+				setImageFileUploading(false);
+				setMyMessages((prevMessages) => ({
+					...prevMessages,
+					imageFileErrorMsg: "Image size must be less than 2 MBs!",
+				}));
+				return;
+			}
+
+			setImageFileUrl(URL.createObjectURL(imageFile));
 			uploadImage();
 		}
 	}, [imageFile]);
 
 	const uploadImage = async () => {
-		setImageFileUploading(true);
-		setImageFileUploadError(null);
 		const storage = getStorage(app);
 		const fileName = new Date().getTime() + imageFile.name;
 		const storageRef = ref(storage, fileName);
@@ -69,19 +110,25 @@ const DashProfile = () => {
 				setImageFileUploadProgress(progress.toFixed(0));
 			},
 			(error) => {
-				setImageFileUploadError(
-					"Could not upload image. (File must be less than 2 MBs)"
-				);
-				setImageFileUploadProgress(null);
+				setMyMessages((prevMessages) => ({
+					...prevMessages,
+					imageFileErrorMsg:
+						"Could not upload image.\nFile must be less than 2 MBs!",
+				}));
 				setImageFile(null);
 				setImageFileUrl(null);
 				setImageFileUploading(false);
+				setImageFileUploadProgress(null);
 			},
 			() => {
 				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-					setImageFileUrl(downloadURL);
 					setFormData({ ...formData, profilePicture: downloadURL });
+					setImageFileUrl(downloadURL);
 					setImageFileUploading(false);
+					setMyMessages((prevMessages) => ({
+						...prevMessages,
+						imageFileSuccessMsg: "Image uploaded successfully",
+					}));
 				});
 			}
 		);
@@ -101,25 +148,91 @@ const DashProfile = () => {
 	// }
 
 	const handleChange = (e) => {
-		setFormData({ ...formData, [e.target.id]: e.target.value });
+		setUpdateUserLoading(false);
+		setMyMessages((prevMessages) => ({
+			...prevMessages,
+			imageFileErrorMsg: null,
+			imageFileSuccessMsg: null,
+			updateUserErrorMsg: null,
+			updateUserSuccessMsg: null,
+		}));
+
+		// setFormData({ ...formData, [e.target.id]: e.target.value });
+		setFormData((prevFormData) => ({
+			...prevFormData,
+			[e.target.id]: e.target.value,
+		}));
 	};
 
 	// console.log(formData);
 
-	const handleSubmit = async (e) => {
+	const handleUpdateUserSubmit = async (e) => {
 		e.preventDefault();
-		setUpdateUserSuccess(null);
-		setUpdateUserError(null);
-		if (Object.keys(formData).length === 0) {
-			setUpdateUserError("No changes made");
+		setUpdateUserLoading(true);
+		setMyMessages((prevMessages) => ({
+			...prevMessages,
+			updateUserErrorMsg: null,
+			updateUserSuccessMsg: null,
+		}));
+
+		if (!currentUser.googleAuth && !forgetPassword) {
+			if (!formData.currentPassword || formData.currentPassword === "") {
+				setUpdateUserLoading(false);
+				setMyMessages((prevMessages) => ({
+					...prevMessages,
+					updateUserErrorMsg:
+						"Enter your current password for update your profile.",
+				}));
+				return;
+			}
+		}
+		if (formData.password === "") {
+			delete formData.password;
+		}
+		if (formData.confirmPassword === "") {
+			delete formData.confirmPassword;
+		}
+		if (formData.username === currentUser.username) {
+			delete formData.username;
+		}
+		if (formData.email === currentUser.email) {
+			delete formData.email;
+		}
+
+		if (
+			(!currentUser.googleAuth && Object.keys(formData).length < 2) ||
+			(currentUser.googleAuth && Object.keys(formData).length === 0)
+		) {
+			setUpdateUserLoading(false);
+			setMyMessages((prevMessages) => ({
+				...prevMessages,
+				updateUserErrorMsg: "No changes made!",
+			}));
 			return;
 		}
+
 		if (imageFileUploading) {
-			setUpdateUserError("Please wait for image to upload");
+			setUpdateUserLoading(false);
+			setMyMessages((prevMessages) => ({
+				...prevMessages,
+				updateUserErrorMsg: "Please wait for image to upload!",
+			}));
 			return;
 		}
+
+		if (
+			(formData.password || formData.confirmPassword) &&
+			formData.password !== formData.confirmPassword
+		) {
+			setUpdateUserLoading(false);
+			setMyMessages((prevMessages) => ({
+				...prevMessages,
+				updateUserErrorMsg: "Your password isn't same. Try again!",
+			}));
+			return;
+		}
+
 		try {
-			dispatch(updateStart());
 			const res = await fetch(`/api/user/update/${currentUser._id}`, {
 				method: "PUT",
 				headers: {
@@ -127,68 +240,128 @@ const DashProfile = () => {
 				},
 				body: JSON.stringify(formData),
 			});
+
 			const data = await res.json();
 			if (!res.ok) {
-				dispatch(updateFailure(data.message));
-				setUpdateUserError(data.message);
+				setUpdateUserLoading(false);
+				setMyMessages((prevMessages) => ({
+					...prevMessages,
+					updateUserErrorMsg: data.message,
+				}));
+				return;
 			} else {
-				dispatch(updateSuccess(data));
-				setUpdateUserSuccess("User's profile updated successfully");
+				dispatch(updateUserSuccess(data));
+				setUpdateUserLoading(false);
+				setMyMessages((prevMessages) => ({
+					...prevMessages,
+					updateUserSuccessMsg: "User's profile updated successfully",
+				}));
+				// Object.keys(formData).forEach((key) => delete formData[key]);
+				setFormData({});
+				setForgetPassword(false);
+				setImageFileUploadProgress(null);
+				setImageFileUrl(null);
+				setImageFile(null);
 			}
 		} catch (error) {
-			dispatch(updateFailure(error.message));
-			setUpdateUserError(error.message);
+			setUpdateUserLoading(false);
+			setMyMessages((prevMessages) => ({
+				...prevMessages,
+				updateUserErrorMsg: error.message,
+			}));
 		}
 	};
 
 	const handleDeleteUser = async () => {
 		setShowModal(false);
 		try {
-			dispatch(deleteStart());
+			setMyMessages((prevMessages) => ({
+				...prevMessages,
+				deleteUserErrorMsg: null,
+			}));
 			const res = await fetch(`/api/user/delete/${currentUser._id}`, {
 				method: "DELETE",
 			});
+
 			const data = await res.json();
 			if (!res.ok) {
-				dispatch(deleteFailure(data.message));
+				setMyMessages((prevMessages) => ({
+					...prevMessages,
+					deleteUserErrorMsg: data.message,
+				}));
+				return;
 			} else {
-				dispatch(deleteSuccess(data));
+				dispatch(deleteUserSuccess(data));
 			}
 		} catch (error) {
-			dispatch(deleteFailure(error.message));
+			setMyMessages((prevMessages) => ({
+				...prevMessages,
+				deleteUserErrorMsg: error.message,
+			}));
 		}
 	};
 
-	const handleSignout = async () => {
+	const handleSignOut = async () => {
 		try {
+			setMyMessages((prevMessages) => ({
+				...prevMessages,
+				signOutErrorMsg: null,
+			}));
+
 			const res = await fetch("/api/user/signout", {
 				method: "POST",
 			});
+
 			const data = await res.json();
 			if (!res.ok) {
-				console.log(data.message);
+				setMyMessages((prevMessages) => ({
+					...prevMessages,
+					signOutErrorMsg: data.message,
+				}));
+				return;
 			} else {
-				dispatch(signoutSuccess(data));
+				dispatch(signOutSuccess(data));
 			}
 		} catch (error) {
-			console.log(error.message);
+			setMyMessages((prevMessages) => ({
+				...prevMessages,
+				signOutErrorMsg: error.message,
+			}));
 		}
+	};
+
+	const handleForgetPassword = () => {
+		setForgetPassword(true);
+		setMyMessages((prevMessages) => ({
+			...prevMessages,
+			updateUserErrorMsg: null,
+			imageFileErrorMsg: null,
+			imageFileSuccessMsg: null,
+		}));
+		setImageFileUploadProgress(null);
+		setImageFileUrl(null);
+		setImageFile(null);
+		// Object.keys(formData).forEach((key) => delete formData[key]);
+		setFormData({ forgetPassword: true });
 	};
 
 	return (
 		<div className="max-w-md mx-auto p-3 w-full">
-			<h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
-			<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+			<h1 className="my-5 text-center font-semibold text-3xl">Profile</h1>
+			<form className="flex flex-col gap-3" onSubmit={handleUpdateUserSubmit}>
 				<input
 					type="file"
 					accept="image/*"
 					onChange={handleImageChange}
 					ref={filePickerRef}
 					hidden
+					disabled={forgetPassword}
 				/>
-				<div
-					className="relative w-32 h-32 self-center cursor-pointer 
-                    shadow-md overflow-hidden rounded-full"
+				<button
+					type="button"
+					disabled={forgetPassword}
+					className="relative w-32 h-32 self-center cursor-pointer mb-1 shadow-md 
+                    overflow-hidden rounded-full disabled:cursor-not-allowed disabled:opacity-40"
 					onClick={() => filePickerRef.current.click()}>
 					{imageFileUploadProgress && (
 						<CircularProgressbar
@@ -221,62 +394,119 @@ const DashProfile = () => {
 													"opacity-60"
 												}`}
 					/>
-				</div>
-				{imageFileUploadError && (
-					<Alert color="failure" className="flex items-center">
-						{imageFileUploadError}
-					</Alert>
-				)}
+				</button>
+
 				<TextInput
 					type="text"
 					id="username"
-					placeholder="username"
-					defaultValue={currentUser.username}
+					placeholder="Username"
 					onChange={handleChange}
+					value={formData.username || currentUser.username}
+					disabled={forgetPassword}
 				/>
 				<TextInput
 					type="email"
 					id="email"
-					placeholder="email"
-					defaultValue={currentUser.email}
+					placeholder="Email"
 					onChange={handleChange}
+					value={formData.email || currentUser.email}
+					disabled
 				/>
+				{!currentUser.googleAuth && (
+					<TextInput
+						type="password"
+						id="currentPassword"
+						placeholder="Current Password"
+						onChange={handleChange}
+						value={formData.currentPassword || ""}
+						disabled={forgetPassword}
+					/>
+				)}
+				<div className="flex items-center gap-1">
+					<TextInput
+						type={showPassword ? "text" : "password"}
+						placeholder="New Password"
+						id="password"
+						onChange={handleChange}
+						className="flex-auto"
+						value={formData.password || ""}
+					/>
+					<Button
+						className="w-10 h-10 focus:ring-1 items-center rounded-lg"
+						color="gray"
+						onMouseEnter={() => setShowPassword(true)}
+						onMouseLeave={() => setShowPassword(false)}>
+						{showPassword ? <BiSolidShow /> : <BiSolidHide />}
+					</Button>
+				</div>
 				<TextInput
 					type="password"
-					id="password"
-					placeholder="password"
+					id="confirmPassword"
+					placeholder="Confirm Password"
 					onChange={handleChange}
+					value={formData.confirmPassword || ""}
 				/>
+
 				<Button
 					type="submit"
 					gradientDuoTone="purpleToBlue"
 					outline
-					className="uppercase focus:right-1">
-					Update
+					className="uppercase focus:ring-1 mt-1"
+					disabled={updateUserLoading || myMessages.updateUserErrorMsg}>
+					{updateUserLoading ? (
+						<>
+							<Spinner size="sm" />
+							<span className="pl-3">Loading...</span>
+						</>
+					) : (
+						"Update"
+					)}{" "}
 				</Button>
 			</form>
-			<div className="text-red-500 flex justify-between mt-5 mx-1">
+			<div className="text-red-500 flex justify-between mt-4 mx-1">
 				<span onClick={() => setShowModal(true)} className="cursor-pointer ">
 					Delete Account
 				</span>
-				<span onClick={handleSignout} className="cursor-pointer ">
+				<span onClick={handleSignOut} className="cursor-pointer ">
 					Sign Out
 				</span>
 			</div>
-			{updateUserSuccess && (
-				<Alert color="success" className="mt-5">
-					{updateUserSuccess}
-				</Alert>
-			)}
-			{updateUserError && (
-				<Alert color="failure" className="mt-5">
-					{updateUserError}
-				</Alert>
-			)}
-			{error && (
-				<Alert color="failure" className="mt-5">
-					{error}
-				</Alert>
+
+			{Object.entries(myMessages).map(
+				([msg, value]) =>
+					value && (
+						<div key={msg} className="flex items-center gap-1 mt-4">
+							<Alert
+								className="flex-auto"
+								color={msg.includes("Error") ? "failure" : "success"}
+								withBorderAccent>
+								<div className="flex gap-3">
+									<span className="w-5 h-5">
+										<MdCancelPresentation
+											className="cursor-pointer w-6 h-6"
+											onClick={() => {
+												setMyMessages((prevMessages) => ({
+													...prevMessages,
+													[msg]: null,
+												}));
+											}}
+										/>
+									</span>
+									<span>
+										{value}
+										{value.includes("Invalid password.") && (
+											<span
+												onClick={handleForgetPassword}
+												className="cursor-pointer">
+												{" "}
+												Forget Password?
+											</span>
+										)}
+									</span>
+								</div>
+							</Alert>
+						</div>
+					)
 			)}
 
 			<Modal

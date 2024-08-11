@@ -18,8 +18,14 @@ const SignIn = () => {
 		// console.log(e.target.value);
 		setLoading(false);
 		setErrorMessage(null);
-		setFormData({ ...formData, [e.target.id]: e.target.value });
+		// setFormData({ ...formData, [e.target.id]: e.target.value });
+		setFormData((prevFormData) => ({
+			...prevFormData,
+			[e.target.id]: e.target.value,
+		}));
 	};
+
+	// console.log(formData);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
