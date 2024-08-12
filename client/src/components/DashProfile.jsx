@@ -198,18 +198,6 @@ const DashProfile = () => {
 			delete formData.email;
 		}
 
-		if (
-			(!currentUser.googleAuth && Object.keys(formData).length < 2) ||
-			(currentUser.googleAuth && Object.keys(formData).length === 0)
-		) {
-			setUpdateUserLoading(false);
-			setMyMessages((prevMessages) => ({
-				...prevMessages,
-				updateUserErrorMsg: "No changes made!",
-			}));
-			return;
-		}
-
 		if (!currentUser.googleAuth && !forgetPassword) {
 			if (!formData.currentPassword || formData.currentPassword === "") {
 				setUpdateUserLoading(false);
@@ -230,6 +218,18 @@ const DashProfile = () => {
 			setMyMessages((prevMessages) => ({
 				...prevMessages,
 				updateUserErrorMsg: "Your password isn't same. Try again!",
+			}));
+			return;
+		}
+
+		if (
+			(!currentUser.googleAuth && Object.keys(formData).length < 2) ||
+			(currentUser.googleAuth && Object.keys(formData).length === 0)
+		) {
+			setUpdateUserLoading(false);
+			setMyMessages((prevMessages) => ({
+				...prevMessages,
+				updateUserErrorMsg: "No changes made!",
 			}));
 			return;
 		}
