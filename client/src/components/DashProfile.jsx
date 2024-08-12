@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { MdCancelPresentation } from "react-icons/md";
 import { BiSolidHide, BiSolidShow } from "react-icons/bi";
+import { Link } from "react-router-dom";
 
 const DashProfile = () => {
 	const { currentUser } = useSelector((state) => state.user);
@@ -374,7 +375,7 @@ const DashProfile = () => {
 
 	return (
 		<div className="max-w-md mx-auto p-3 w-full">
-			<h1 className="my-5 text-center font-semibold text-3xl">Profile</h1>
+			<h1 className="my-4 text-center font-semibold text-3xl">Profile</h1>
 			<form className="flex flex-col gap-3" onSubmit={handleUpdateUserSubmit}>
 				<input
 					type="file"
@@ -478,7 +479,7 @@ const DashProfile = () => {
 					type="submit"
 					gradientDuoTone="purpleToBlue"
 					outline
-					className="uppercase focus:ring-1 mt-1"
+					className="uppercase focus:ring-1"
 					disabled={updateUserLoading || myMessages.updateUserErrorMsg}>
 					{updateUserLoading ? (
 						<>
@@ -490,7 +491,19 @@ const DashProfile = () => {
 					)}
 				</Button>
 			</form>
-			<div className="text-red-500 flex justify-between mt-4 mx-1">
+
+			{currentUser.isAdmin && (
+				<Link to={"/create-post"}>
+					<Button
+						type="button"
+						gradientDuoTone="purpleToPink"
+						className="uppercase focus:ring-1 mt-3 w-full">
+						Create a post
+					</Button>
+				</Link>
+			)}
+
+			<div className="text-red-500 flex justify-between mt-2 mx-1">
 				<span onClick={() => setShowModal(true)} className="cursor-pointer ">
 					Delete Account
 				</span>

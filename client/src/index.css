@@ -2,7 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+	height: 100vh;
+}
+
 [data-testid="flowbite-avatar-img"] {
 	object-fit: cover;
 }
 
+.ql-editor {
+	font-size: 1.05rem;
+}
