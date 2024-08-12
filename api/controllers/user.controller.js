@@ -90,6 +90,13 @@ export const updateUser = async (req, res, next) => {
 				errorHandler(400, "Username can only contains letters and numbers!")
 			);
 		}
+
+		const checkUsername = await User.findOne({ username });
+		if (checkUsername) {
+			return next(
+				errorHandler(400, "Username already taken. Try another one!")
+			);
+		}
 	}
 
 	if (email || email === "") {
@@ -98,6 +105,11 @@ export const updateUser = async (req, res, next) => {
 		}
 		if (email !== email.toLowerCase()) {
 			return next(errorHandler(400, "Email must be lowercase!"));
+		}
+
+		const checkEmail = await User.findOne({ email });
+		if (checkEmail) {
+			return next(errorHandler(400, "Email already exists. Try another one!"));
 		}
 	}
 
@@ -127,21 +139,34 @@ export const deleteUser = async (req, res, next) => {
 	if (req.user.id !== req.params.userId) {
 		return next(errorHandler(403, "You are not allowed to delete this user"));
 	}
+
+	const { inputPassword } = req.body;
+
+	const validUser = await User.findById(req.params.userId);
+	if (!validUser) {
+		return next(errorHandler(404, "Oops! User not found."));
+	}
+
+	if (!validUser.googleAuth) {
+		if (!inputPassword || inputPassword === "") {
+			return next(errorHandler(400, "Password required!"));
+		} else {
+			const validPassword = bcryptjs.compareSync(
+				inputPassword,
+				validUser.password
+			);
+			if (!validPassword) {
+				return next(errorHandler(400, "Invalid password. Try again!"));
+			}
+		}
+	}
+
 	try {
 		await User.findByIdAndDelete(req.params.userId);
+		res.clearCookie("access_token");
 		res.status(200).json("User has been deleted");
 	} catch (error) {
 		next(error);
 	}
 };
 
-export const signout = (req, res, next) => {
-	try {
-		res
-			.clearCookie("access_token")
-			.status(200)
-			.json("User has been signed out");
-	} catch (error) {
-		next(error);
-	}
-};

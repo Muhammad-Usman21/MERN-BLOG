@@ -25,20 +25,21 @@ const DashProfile = () => {
 	const { currentUser } = useSelector((state) => state.user);
 	const [imageFile, setImageFile] = useState(null);
 	const [imageFileUrl, setImageFileUrl] = useState(null);
-	// const [imageFileErrorMsg, setImageFileErrorMsg] = useState(null);
-	// const [imageFileSuccessMsg, setImageFileSuccessMsg] = useState(null);
 	const [imageFileUploading, setImageFileUploading] = useState(false);
 	const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
+	// const [imageFileErrorMsg, setImageFileErrorMsg] = useState(null);
+	// const [imageFileSuccessMsg, setImageFileSuccessMsg] = useState(null);
+	const [updateUserLoading, setUpdateUserLoading] = useState(false);
 	// const [updateUserErrorMsg, setUpdateUserErrorMsg] = useState(null);
 	// const [updateUserSuccessMsg, setUpdateUserSuccessMsg] = useState(null);
-	const [updateUserLoading, setUpdateUserLoading] = useState(false);
 	// const [deleteUserErrorMsg, setDeleteUserErrorMsg] = useState(null);
 	// const [signOutErrorMsg, setSignOutErrorMsg] = useState(null);
-	const [formData, setFormData] = useState({});
 	const filePickerRef = useRef();
 	const dispatch = useDispatch();
-	const [showModal, setShowModal] = useState(false);
+	const [formData, setFormData] = useState({});
+	const [inputPasswordValue, setInputPasswordValue] = useState(null);
 	const [showPassword, setShowPassword] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 	const [forgetPassword, setForgetPassword] = useState(false);
 	const [myMessages, setMyMessages] = useState({
 		updateUserErrorMsg: null,
@@ -175,17 +176,15 @@ const DashProfile = () => {
 			updateUserSuccessMsg: null,
 		}));
 
-		if (!currentUser.googleAuth && !forgetPassword) {
-			if (!formData.currentPassword || formData.currentPassword === "") {
-				setUpdateUserLoading(false);
-				setMyMessages((prevMessages) => ({
-					...prevMessages,
-					updateUserErrorMsg:
-						"Enter your current password for update your profile.",
-				}));
-				return;
-			}
+		if (imageFileUploading) {
+			setUpdateUserLoading(false);
+			setMyMessages((prevMessages) => ({
+				...prevMessages,
+				updateUserErrorMsg: "Please wait for image to upload!",
+			}));
+			return;
 		}
+
 		if (formData.password === "") {
 			delete formData.password;
 		}
@@ -211,13 +210,16 @@ const DashProfile = () => {
 			return;
 		}
 
-		if (imageFileUploading) {
-			setUpdateUserLoading(false);
-			setMyMessages((prevMessages) => ({
-				...prevMessages,
-				updateUserErrorMsg: "Please wait for image to upload!",
-			}));
-			return;
+		if (!currentUser.googleAuth && !forgetPassword) {
+			if (!formData.currentPassword || formData.currentPassword === "") {
+				setUpdateUserLoading(false);
+				setMyMessages((prevMessages) => ({
+					...prevMessages,
+					updateUserErrorMsg:
+						"Enter your current password for update your profile.",
+				}));
+				return;
+			}
 		}
 
 		if (
@@ -272,8 +274,28 @@ const DashProfile = () => {
 		}
 	};
 
-	const handleDeleteUser = async () => {
+	const handleInputPasswordChange = (e) => {
+		setMyMessages((prevMessages) => ({
+			...prevMessages,
+			deleteUserErrorMsg: null,
+		}));
+		setInputPasswordValue(e.target.value);
+	};
+
+	const handleDeleteUserSubmit = async (e) => {
+		e.preventDefault();
 		setShowModal(false);
+
+		if (!currentUser.googleAuth) {
+			if (!inputPasswordValue || inputPasswordValue === "") {
+				setInputPasswordValue(null);
+				setMyMessages((prevMessages) => ({
+					...prevMessages,
+					deleteUserErrorMsg: "Password required!",
+				}));
+				return;
+			}
+		}
 		try {
 			setMyMessages((prevMessages) => ({
 				...prevMessages,
@@ -281,10 +303,15 @@ const DashProfile = () => {
 			}));
 			const res = await fetch(`/api/user/delete/${currentUser._id}`, {
 				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ inputPassword: inputPasswordValue }),
 			});
 
 			const data = await res.json();
 			if (!res.ok) {
+				setInputPasswordValue(null);
 				setMyMessages((prevMessages) => ({
 					...prevMessages,
 					deleteUserErrorMsg: data.message,
@@ -294,6 +321,7 @@ const DashProfile = () => {
 				dispatch(deleteUserSuccess(data));
 			}
 		} catch (error) {
+			setInputPasswordValue(null);
 			setMyMessages((prevMessages) => ({
 				...prevMessages,
 				deleteUserErrorMsg: error.message,
@@ -308,7 +336,7 @@ const DashProfile = () => {
 				signOutErrorMsg: null,
 			}));
 
-			const res = await fetch("/api/user/signout", {
+			const res = await fetch("/api/auth/signout", {
 				method: "POST",
 			});
 
@@ -332,17 +360,16 @@ const DashProfile = () => {
 
 	const handleForgetPassword = () => {
 		setForgetPassword(true);
-		setMyMessages((prevMessages) => ({
-			...prevMessages,
-			updateUserErrorMsg: null,
-			imageFileErrorMsg: null,
-			imageFileSuccessMsg: null,
-		}));
+		Object.keys(myMessages).forEach((msg) => {
+			myMessages[msg] = null;
+		});
 		setImageFileUploadProgress(null);
 		setImageFileUrl(null);
 		setImageFile(null);
 		// Object.keys(formData).forEach((key) => delete formData[key]);
 		setFormData({ forgetPassword: true });
+		setShowModal(false);
+		setInputPasswordValue(null);
 	};
 
 	return (
@@ -401,7 +428,7 @@ const DashProfile = () => {
 					id="username"
 					placeholder="Username"
 					onChange={handleChange}
-					value={formData.username || currentUser.username}
+					defaultValue={currentUser.username}
 					disabled={forgetPassword}
 				/>
 				<TextInput
@@ -409,7 +436,7 @@ const DashProfile = () => {
 					id="email"
 					placeholder="Email"
 					onChange={handleChange}
-					value={formData.email || currentUser.email}
+					defaultValue={currentUser.email}
 					disabled
 				/>
 				{!currentUser.googleAuth && (
@@ -460,7 +487,7 @@ const DashProfile = () => {
 						</>
 					) : (
 						"Update"
-					)}{" "}
+					)}
 				</Button>
 			</form>
 			<div className="text-red-500 flex justify-between mt-4 mx-1">
@@ -511,28 +538,64 @@ const DashProfile = () => {
 
 			<Modal
 				show={showModal}
-				onClose={() => setShowModal(false)}
+				onClose={() => {
+					setShowModal(false);
+					setInputPasswordValue(null);
+				}}
 				popup
-				size="md">
+				size="lg">
 				<Modal.Header />
 				<Modal.Body>
-					<div className="text-center">
-						<HiOutlineExclamationCircle
-							className="h-14 w-14 
-						text-gray-400 dark:text-gray-200 dark:bg-black mb-4 mx-auto"
-						/>
-						<h3 className="mb-5 text-lg text-gray-500 dark:text-gray-300">
+					<form
+						className="flex flex-col text-center"
+						onSubmit={handleDeleteUserSubmit}>
+						<div className="flex items-center mb-8 gap-8 self-center">
+							<HiOutlineExclamationCircle
+								className="h-14 w-14 text-gray-400 dark:text-gray-200 
+							dark:bg-black"
+							/>
+							<span className="text-2xl text-gray-500 dark:text-gray-300">
+								Delete Account
+							</span>
+						</div>
+						{!currentUser.googleAuth && (
+							<div className="flex items-center">
+								<TextInput
+									type="password"
+									id="password"
+									placeholder="Password"
+									onChange={handleInputPasswordChange}
+									value={inputPasswordValue || ""}
+									disabled={forgetPassword}
+									className="flex-grow"
+								/>
+								<span
+									onClick={handleForgetPassword}
+									className="cursor-pointer ml-4 text-red-500">
+									Forget Password?
+								</span>
+							</div>
+						)}
+						<h3 className="my-5 text-lg text-gray-500 dark:text-gray-300">
 							Are you sure you want to delete your account?
 						</h3>
 						<div className="flex justify-around">
-							<Button color="failure" onClick={handleDeleteUser}>
+							<Button
+								type="submit"
+								color="failure"
+								className="focus:ring-1"
+								disabled={forgetPassword}>
 								{"Yes, i'm sure"}
 							</Button>
-							<Button color="gray" onClick={() => setShowModal(false)}>
+							<Button
+								type="button"
+								color="gray"
+								onClick={() => setShowModal(false)}
+								className="focus:ring-1">
 								No, cancel
 							</Button>
 						</div>
-					</div>
+					</form>
 				</Modal.Body>
 			</Modal>
 		</div>

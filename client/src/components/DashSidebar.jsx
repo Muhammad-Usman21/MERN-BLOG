@@ -21,7 +21,7 @@ const DashSidebar = () => {
 
 	const handleSignOut = async () => {
 		try {
-			const res = await fetch("/api/user/signout", {
+			const res = await fetch("/api/auth/signout", {
 				method: "POST",
 			});
 
