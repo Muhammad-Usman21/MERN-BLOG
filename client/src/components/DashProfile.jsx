@@ -503,7 +503,7 @@ const DashProfile = () => {
 				</Link>
 			)}
 
-			<div className="text-red-500 flex justify-between mt-2 mx-1">
+			<div className="text-red-500 flex justify-between mt-2 mb-4 mx-1">
 				<span onClick={() => setShowModal(true)} className="cursor-pointer ">
 					Delete Account
 				</span>
