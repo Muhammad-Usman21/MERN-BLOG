@@ -13,3 +13,37 @@ body {
 .ql-editor {
 	font-size: 1.05rem;
 }
+
+[data-testid="footer-groupLink"] > li {
+	margin: 0;
+}
+
+nav[aria-label="Sidebar"] {
+	border: none;
+}
+
+nav[aria-label="Sidebar"].light > div {
+	background-image: url("../sidebar-light.jpg");
+	background-size: cover;
+	background-position: center;
+	border-bottom: 2px solid #047481;
+}
+
+nav[aria-label="Sidebar"].dark > div {
+	background-image: url("../sidebar-dark.jpg");
+	background-size: cover;
+	background-position: center;
+	border-bottom: 2px solid #374151;
+}
+
+@media (min-width: 768px) {
+	nav[aria-label="Sidebar"].light > div {
+		border-right: 2px solid #047481;
+		border-bottom: none;
+	}
+
+	nav[aria-label="Sidebar"].dark > div {
+		border-right: 2px solid #374151;
+		border-bottom: none;
+	}
+}

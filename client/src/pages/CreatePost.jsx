@@ -79,91 +79,99 @@ const CreatePost = () => {
 	};
 
 	return (
-		<div className="p-3 max-w-3xl mx-auto min-h-screen">
-			<h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
-			<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-				<div className="flex flex-col gap-4 sm:flex-row justify-between">
-					<TextInput
-						type="text"
-						placeholder="Title"
-						required
-						id="title"
-						className="flex-1"
-						onChange={(e) =>
-							setFormData({ ...formData, title: e.target.value })
-						}
-					/>
-					<Select
-						onChange={(e) =>
-							setFormData({ ...formData, category: e.target.value })
-						}>
-						<option value="uncategorized">Select a category</option>
-						<option value="javascript">JavaScript</option>
-						<option value="reactjs">React.js</option>
-						<option value="nodejs">Node.js</option>
-						<option value="tailwindcss">Tailwind CSS</option>
-					</Select>
-				</div>
-				<div
-					className="flex gap-4 items-center justify-between 
+		<div
+			className="min-h-screen bg-cover bg-center py-14 
+			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg-dark.jpg')]">
+			<div
+				className="p-7 max-w-3xl mx-7 sm:p-10 sm:mx-12 md:mx-auto
+				bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg">
+				<h1 className="text-center text-3xl mb-7 font-semibold">
+					Create a post
+				</h1>
+				<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+					<div className="flex flex-col gap-4 sm:flex-row justify-between">
+						<TextInput
+							type="text"
+							placeholder="Title"
+							required
+							id="title"
+							className="flex-1"
+							onChange={(e) =>
+								setFormData({ ...formData, title: e.target.value })
+							}
+						/>
+						<Select
+							onChange={(e) =>
+								setFormData({ ...formData, category: e.target.value })
+							}>
+							<option value="uncategorized">Select a category</option>
+							<option value="javascript">JavaScript</option>
+							<option value="reactjs">React.js</option>
+							<option value="nodejs">Node.js</option>
+							<option value="tailwindcss">Tailwind CSS</option>
+						</Select>
+					</div>
+					<div
+						className="flex gap-4 items-center justify-between 
 					border-4 border-teal-500 border-dotted p-3">
-					<FileInput
-						type="file"
-						accept="image/*"
-						onChange={(e) => setFile(e.target.files[0])}
+						<FileInput
+							type="file"
+							accept="image/*"
+							onChange={(e) => setFile(e.target.files[0])}
+						/>
+						<Button
+							type="button"
+							gradientDuoTone="purpleToBlue"
+							size="sm"
+							outline
+							className="focus:ring-1"
+							onClick={handleUploadImage}
+							disabled={imageUploadProgress}>
+							{imageUploadProgress ? (
+								<div className="flex items-center">
+									<CircularProgressbar
+										className="h-5"
+										value={imageUploadProgress}
+									/>
+									<span className="ml-1">Uploading...</span>
+								</div>
+							) : (
+								"Upload Image"
+							)}
+						</Button>
+					</div>
+					{imageUploadErrorMsg && (
+						<Alert color="failure">{imageUploadErrorMsg}</Alert>
+					)}
+					{formData.image && (
+						<img
+							src={formData.image}
+							alt="upload"
+							className="w-full h-72 object-cover border 
+						border-gray-500 dark:border-gray-300"
+						/>
+					)}
+					<ReactQuill
+						theme="snow"
+						placeholder="Write something...."
+						className="h-72 mb-12"
+						required
+						onChange={(value) => setFormData({ ...formData, content: value })}
 					/>
 					<Button
-						type="button"
-						gradientDuoTone="purpleToBlue"
-						size="sm"
+						type="submit"
+						gradientDuoTone="purpleToPink"
 						outline
-						className="focus:ring-1"
-						onClick={handleUploadImage}
-						disabled={imageUploadProgress}>
-						{imageUploadProgress ? (
-							<div className="flex items-center">
-								<CircularProgressbar
-									className="h-5"
-									value={imageUploadProgress}
-								/>
-								<span className="ml-1">Uploading...</span>
-							</div>
-						) : (
-							"Upload Image"
-						)}
+						className="focus:ring-1 uppercase">
+						Publish
 					</Button>
-				</div>
-				{imageUploadErrorMsg && (
-					<Alert color="failure">{imageUploadErrorMsg}</Alert>
+				</form>
+				{publishErrorMsg && (
+					<Alert className="mt-5" color="failure">
+						{publishErrorMsg}
+					</Alert>
 				)}
-				{formData.image && (
-					<img
-						src={formData.image}
-						alt="upload"
-						className="w-full h-72 object-cover border 
-						border-gray-500 dark:border-gray-300"
-					/>
-				)}
-				<ReactQuill
-					theme="snow"
-					placeholder="Write something...."
-					className="h-72 mb-12"
-					required
-					onChange={(value) => setFormData({ ...formData, content: value })}
-				/>
-				<Button
-					type="submit"
-					gradientDuoTone="purpleToPink"
-					outline
-					className="focus:ring-1 uppercase">
-					Publish
-				</Button>
-			</form>
-			{publishErrorMsg && (
-				<Alert className="mt-5" color="failure">
-					{publishErrorMsg}
-				</Alert>
-			)}
+			</div>
 		</div>
 	);
 };

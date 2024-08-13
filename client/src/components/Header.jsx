@@ -38,7 +38,9 @@ const Header = () => {
 	};
 
 	return (
-		<Navbar className="border-b-2 dark:bg-[#121416] lg:px-14">
+		<Navbar
+			className="border-b-2 border-teal-600 lg:px-14 bg-cover bg-center 
+			bg-[url('../../h&f-light.jpg')] dark:bg-[url('../../header-dark.jpg')]">
 			<Link
 				to="/"
 				className="font-semibold dark:text-white text-xl flex items-center">

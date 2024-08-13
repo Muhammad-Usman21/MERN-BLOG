@@ -15,20 +15,11 @@ const FooterComp = () => {
 	return (
 		<Footer
 			container
-			className="border border-t-8 border-teal-800 dark:bg-[#121416]">
+			className="rounded-none border-t-4 border-teal-700 dark:border-[#374151] bg-cover bg-center 
+			bg-[url('../../h&f-light.jpg')] dark:bg-[url('../../footer-dark.jpg')]">
 			<div className="w-full max-w-7xl mx-auto">
 				<div className="flex flex-col items-center gap-8 w-full sm:flex-row sm:justify-between">
 					<div className="mt-4 sm:mt-0">
-						{/* <Link
-							to="/"
-							className="self-center whitespace-nowrap font-semibold dark:text-white text-2xl">
-							<span
-								className="px-2 py-1 bg-gradient-to-r from-indigo-500 
-                                via-purple-500 to-pink-500 rounded-lg text-white">
-								{"Usman's"}
-							</span>
-							Blog
-						</Link> */}
 						<Link
 							to="/"
 							className="font-semibold dark:text-white text-xl flex items-center">
@@ -36,11 +27,14 @@ const FooterComp = () => {
 							<span className="ml-2 text-3xl">Blog</span>
 						</Link>
 					</div>
-					<div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-8 mt-4 sm:mt-0">
+					<div
+						className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-8 mt-4 sm:mt-0 text-center
+						bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg p-3">
 						<div>
 							<Footer.Title title="About" />
-							<Footer.LinkGroup col>
+							<Footer.LinkGroup col className="space-y-2">
 								<Footer.Link
+									className="m-0 p-0"
 									href="/about"
 									target="_blank"
 									rel="noopener noreferrer">
@@ -56,14 +50,14 @@ const FooterComp = () => {
 						</div>
 						<div>
 							<Footer.Title title="Legal" />
-							<Footer.LinkGroup col>
+							<Footer.LinkGroup col className="space-y-2">
 								<Footer.Link href="#">Privacy Policy</Footer.Link>
 								<Footer.Link href="#">Terms & Conditions</Footer.Link>
 							</Footer.LinkGroup>
 						</div>
 						<div>
 							<Footer.Title title="Follow us" />
-							<Footer.LinkGroup col>
+							<Footer.LinkGroup col className="space-y-2">
 								<Footer.Link
 									href="https://www.linkedin.com"
 									target="_blank"

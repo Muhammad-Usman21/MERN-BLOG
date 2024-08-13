@@ -11,6 +11,7 @@ const DashSidebar = () => {
 	const location = useLocation();
 	const [tab, setTab] = useState("");
 	const dispatch = useDispatch();
+	const { theme } = useSelector((state) => state.theme);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(location.search);
@@ -39,7 +40,7 @@ const DashSidebar = () => {
 	};
 
 	return (
-		<Sidebar className="w-full md:w-56">
+		<Sidebar className={`w-full md:w-56 ${theme}`}>
 			<Sidebar.Items>
 				<Sidebar.ItemGroup className="flex flex-col">
 					<Link to="/dashboard?tab=profile">

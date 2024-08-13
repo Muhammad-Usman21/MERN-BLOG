@@ -374,243 +374,249 @@ const DashProfile = () => {
 	};
 
 	return (
-		<div className="max-w-md mx-auto p-3 w-full">
-			<h1 className="my-4 text-center font-semibold text-3xl">Profile</h1>
-			<form className="flex flex-col gap-3" onSubmit={handleUpdateUserSubmit}>
-				<input
-					type="file"
-					accept="image/*"
-					onChange={handleImageChange}
-					ref={filePickerRef}
-					hidden
-					disabled={forgetPassword}
-				/>
-				<button
-					type="button"
-					disabled={forgetPassword}
-					className="relative w-32 h-32 self-center cursor-pointer mb-1 shadow-md 
+		<div
+			className="w-full bg-cover bg-center
+			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg2-dark.jpg')]">
+			<div
+				className="max-w-xl my-10 mx-7 p-7 sm:mx-12 lg:mx-auto sm:p-10 self-center
+			bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg">
+				<h1 className="mt-2 mb-4 text-center font-semibold text-3xl">Profile</h1>
+				<form className="flex flex-col gap-3" onSubmit={handleUpdateUserSubmit}>
+					<input
+						type="file"
+						accept="image/*"
+						onChange={handleImageChange}
+						ref={filePickerRef}
+						hidden
+						disabled={forgetPassword}
+					/>
+					<button
+						type="button"
+						disabled={forgetPassword}
+						className="relative w-32 h-32 self-center cursor-pointer mb-1 shadow-md 
                     overflow-hidden rounded-full disabled:cursor-not-allowed disabled:opacity-40"
-					onClick={() => filePickerRef.current.click()}>
-					{imageFileUploadProgress && (
-						<CircularProgressbar
-							value={imageFileUploadProgress || 0}
-							text={`${imageFileUploadProgress}%`}
-							strokeWidth={5}
-							styles={{
-								root: {
-									width: "100%",
-									height: "100%",
-									position: "absolute",
-									top: 0,
-									left: 0,
-								},
-								path: {
-									stroke: `rgba(62, 152, 199, ${
-										imageFileUploadProgress / 100
-									})`,
-								},
-							}}
-						/>
-					)}
-					<img
-						src={imageFileUrl || currentUser.profilePicture}
-						alt="user"
-						className={`rounded-full w-full h-full object-cover 
+						onClick={() => filePickerRef.current.click()}>
+						{imageFileUploadProgress && (
+							<CircularProgressbar
+								value={imageFileUploadProgress || 0}
+								text={`${imageFileUploadProgress}%`}
+								strokeWidth={5}
+								styles={{
+									root: {
+										width: "100%",
+										height: "100%",
+										position: "absolute",
+										top: 0,
+										left: 0,
+									},
+									path: {
+										stroke: `rgba(62, 152, 199, ${
+											imageFileUploadProgress / 100
+										})`,
+									},
+								}}
+							/>
+						)}
+						<img
+							src={imageFileUrl || currentUser.profilePicture}
+							alt="user"
+							className={`rounded-full w-full h-full object-cover 
                         border-4 border-[lightgray] ${
 													imageFileUploadProgress &&
 													imageFileUploadProgress < 100 &&
 													"opacity-60"
 												}`}
-					/>
-				</button>
+						/>
+					</button>
 
-				<TextInput
-					type="text"
-					id="username"
-					placeholder="Username"
-					onChange={handleChange}
-					defaultValue={currentUser.username}
-					disabled={forgetPassword}
-				/>
-				<TextInput
-					type="email"
-					id="email"
-					placeholder="Email"
-					onChange={handleChange}
-					defaultValue={currentUser.email}
-					disabled
-				/>
-				{!currentUser.googleAuth && (
 					<TextInput
-						type="password"
-						id="currentPassword"
-						placeholder="Current Password"
+						type="text"
+						id="username"
+						placeholder="Username"
 						onChange={handleChange}
-						value={formData.currentPassword || ""}
+						defaultValue={currentUser.username}
 						disabled={forgetPassword}
 					/>
-				)}
-				<div className="flex items-center gap-1">
 					<TextInput
-						type={showPassword ? "text" : "password"}
-						placeholder="New Password"
-						id="password"
+						type="email"
+						id="email"
+						placeholder="Email"
 						onChange={handleChange}
-						className="flex-auto"
-						value={formData.password || ""}
+						defaultValue={currentUser.email}
+						disabled
 					/>
-					<Button
-						className="w-10 h-10 focus:ring-1 items-center rounded-lg"
-						color="gray"
-						onMouseEnter={() => setShowPassword(true)}
-						onMouseLeave={() => setShowPassword(false)}>
-						{showPassword ? <BiSolidShow /> : <BiSolidHide />}
-					</Button>
-				</div>
-				<TextInput
-					type="password"
-					id="confirmPassword"
-					placeholder="Confirm Password"
-					onChange={handleChange}
-					value={formData.confirmPassword || ""}
-				/>
-
-				<Button
-					type="submit"
-					gradientDuoTone="purpleToBlue"
-					outline
-					className="uppercase focus:ring-1"
-					disabled={updateUserLoading || myMessages.updateUserErrorMsg}>
-					{updateUserLoading ? (
-						<>
-							<Spinner size="sm" />
-							<span className="pl-3">Loading...</span>
-						</>
-					) : (
-						"Update"
+					{!currentUser.googleAuth && (
+						<TextInput
+							type="password"
+							id="currentPassword"
+							placeholder="Current Password"
+							onChange={handleChange}
+							value={formData.currentPassword || ""}
+							disabled={forgetPassword}
+						/>
 					)}
-				</Button>
-			</form>
+					<div className="flex items-center gap-1">
+						<TextInput
+							type={showPassword ? "text" : "password"}
+							placeholder="New Password"
+							id="password"
+							onChange={handleChange}
+							className="flex-auto"
+							value={formData.password || ""}
+						/>
+						<Button
+							className="w-10 h-10 focus:ring-1 items-center rounded-lg"
+							color="gray"
+							onMouseEnter={() => setShowPassword(true)}
+							onMouseLeave={() => setShowPassword(false)}>
+							{showPassword ? <BiSolidShow /> : <BiSolidHide />}
+						</Button>
+					</div>
+					<TextInput
+						type="password"
+						id="confirmPassword"
+						placeholder="Confirm Password"
+						onChange={handleChange}
+						value={formData.confirmPassword || ""}
+					/>
 
-			{currentUser.isAdmin && (
-				<Link to={"/create-post"}>
 					<Button
-						type="button"
-						gradientDuoTone="purpleToPink"
-						className="uppercase focus:ring-1 mt-3 w-full">
-						Create a post
+						type="submit"
+						gradientDuoTone="purpleToBlue"
+						outline
+						className="uppercase focus:ring-1"
+						disabled={updateUserLoading || myMessages.updateUserErrorMsg}>
+						{updateUserLoading ? (
+							<>
+								<Spinner size="sm" />
+								<span className="pl-3">Loading...</span>
+							</>
+						) : (
+							"Update"
+						)}
 					</Button>
-				</Link>
-			)}
+				</form>
 
-			<div className="text-red-500 flex justify-between mt-2 mb-4 mx-1">
-				<span onClick={() => setShowModal(true)} className="cursor-pointer ">
-					Delete Account
-				</span>
-				<span onClick={handleSignOut} className="cursor-pointer ">
-					Sign Out
-				</span>
-			</div>
+				{currentUser.isAdmin && (
+					<Link to={"/create-post"}>
+						<Button
+							type="button"
+							gradientDuoTone="purpleToPink"
+							className="uppercase focus:ring-1 mt-3 w-full">
+							Create a post
+						</Button>
+					</Link>
+				)}
 
-			{Object.entries(myMessages).map(
-				([msg, value]) =>
-					value && (
-						<div key={msg} className="flex items-center gap-1 mt-4">
-							<Alert
-								className="flex-auto"
-								color={msg.includes("Error") ? "failure" : "success"}
-								withBorderAccent>
-								<div className="flex gap-3">
-									<span className="w-5 h-5">
-										<MdCancelPresentation
-											className="cursor-pointer w-6 h-6"
-											onClick={() => {
-												setMyMessages((prevMessages) => ({
-													...prevMessages,
-													[msg]: null,
-												}));
-											}}
-										/>
-									</span>
-									<span>
-										{value}
-										{value.includes("Invalid password.") && (
-											<span
-												onClick={handleForgetPassword}
-												className="cursor-pointer">
-												{" "}
-												Forget Password?
-											</span>
-										)}
-									</span>
-								</div>
-							</Alert>
-						</div>
-					)
-			)}
+				<div className="text-red-500 flex justify-between mt-2 mb-4 mx-1">
+					<span onClick={() => setShowModal(true)} className="cursor-pointer ">
+						Delete Account
+					</span>
+					<span onClick={handleSignOut} className="cursor-pointer ">
+						Sign Out
+					</span>
+				</div>
 
-			<Modal
-				show={showModal}
-				onClose={() => {
-					setShowModal(false);
-					setInputPasswordValue(null);
-				}}
-				popup
-				size="lg">
-				<Modal.Header />
-				<Modal.Body>
-					<form
-						className="flex flex-col text-center"
-						onSubmit={handleDeleteUserSubmit}>
-						<div className="flex items-center mb-8 gap-8 self-center">
-							<HiOutlineExclamationCircle
-								className="h-14 w-14 text-gray-400 dark:text-gray-200 
+				{Object.entries(myMessages).map(
+					([msg, value]) =>
+						value && (
+							<div key={msg} className="flex items-center gap-1 mt-4">
+								<Alert
+									className="flex-auto"
+									color={msg.includes("Error") ? "failure" : "success"}
+									withBorderAccent>
+									<div className="flex gap-3">
+										<span className="w-5 h-5">
+											<MdCancelPresentation
+												className="cursor-pointer w-6 h-6"
+												onClick={() => {
+													setMyMessages((prevMessages) => ({
+														...prevMessages,
+														[msg]: null,
+													}));
+												}}
+											/>
+										</span>
+										<span>
+											{value}
+											{value.includes("Invalid password.") && (
+												<span
+													onClick={handleForgetPassword}
+													className="cursor-pointer">
+													{" "}
+													Forget Password?
+												</span>
+											)}
+										</span>
+									</div>
+								</Alert>
+							</div>
+						)
+				)}
+
+				<Modal
+					show={showModal}
+					onClose={() => {
+						setShowModal(false);
+						setInputPasswordValue(null);
+					}}
+					popup
+					size="lg">
+					<Modal.Header />
+					<Modal.Body>
+						<form
+							className="flex flex-col text-center"
+							onSubmit={handleDeleteUserSubmit}>
+							<div className="flex items-center mb-8 gap-8 self-center">
+								<HiOutlineExclamationCircle
+									className="h-14 w-14 text-gray-400 dark:text-gray-200 
 							dark:bg-black"
-							/>
-							<span className="text-2xl text-gray-500 dark:text-gray-300">
-								Delete Account
-							</span>
-						</div>
-						{!currentUser.googleAuth && (
-							<div className="flex items-center">
-								<TextInput
-									type="password"
-									id="password"
-									placeholder="Password"
-									onChange={handleInputPasswordChange}
-									value={inputPasswordValue || ""}
-									disabled={forgetPassword}
-									className="flex-grow"
 								/>
-								<span
-									onClick={handleForgetPassword}
-									className="cursor-pointer ml-4 text-red-500">
-									Forget Password?
+								<span className="text-2xl text-gray-500 dark:text-gray-300">
+									Delete Account
 								</span>
 							</div>
-						)}
-						<h3 className="my-5 text-lg text-gray-500 dark:text-gray-300">
-							Are you sure you want to delete your account?
-						</h3>
-						<div className="flex justify-around">
-							<Button
-								type="submit"
-								color="failure"
-								className="focus:ring-1"
-								disabled={forgetPassword}>
-								{"Yes, i'm sure"}
-							</Button>
-							<Button
-								type="button"
-								color="gray"
-								onClick={() => setShowModal(false)}
-								className="focus:ring-1">
-								No, cancel
-							</Button>
-						</div>
-					</form>
-				</Modal.Body>
-			</Modal>
+							{!currentUser.googleAuth && (
+								<div className="flex items-center">
+									<TextInput
+										type="password"
+										id="password"
+										placeholder="Password"
+										onChange={handleInputPasswordChange}
+										value={inputPasswordValue || ""}
+										disabled={forgetPassword}
+										className="flex-grow"
+									/>
+									<span
+										onClick={handleForgetPassword}
+										className="cursor-pointer ml-4 text-red-500">
+										Forget Password?
+									</span>
+								</div>
+							)}
+							<h3 className="my-5 text-lg text-gray-500 dark:text-gray-300">
+								Are you sure you want to delete your account?
+							</h3>
+							<div className="flex justify-around">
+								<Button
+									type="submit"
+									color="failure"
+									className="focus:ring-1"
+									disabled={forgetPassword}>
+									{"Yes, i'm sure"}
+								</Button>
+								<Button
+									type="button"
+									color="gray"
+									onClick={() => setShowModal(false)}
+									className="focus:ring-1">
+									No, cancel
+								</Button>
+							</div>
+						</form>
+					</Modal.Body>
+				</Modal>
+			</div>
 		</div>
 	);
 };

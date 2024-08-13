@@ -62,8 +62,12 @@ const SignUp = () => {
 	};
 
 	return (
-		<div className="min-h-screen mt-20">
-			<div className="flex p-3 max-w-3xl md:mx-auto flex-col md:flex-row md:items-center gap-10 mx-5 sm:mx-12">
+		<div
+			className="min-h-screen py-20 bg-cover bg-center 
+			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg-dark.jpg')]">
+			<div
+				className="flex p-10 max-w-3xl mx-10 sm:mx-14 md:mx-20 lg:mx-auto flex-col md:flex-row md:items-center gap-10
+				bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg">
 				<div className="flex-1">
 					<Link
 						to="/"
