@@ -11,6 +11,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
+import TicTacToe from "./pages/TicTacToe";
 
 const App = () => {
 	return (
@@ -29,6 +30,7 @@ const App = () => {
 					<Route path="/update-post/:postId" element={<UpdatePost />} />
 				</Route>
 				<Route path="/projects" element={<Projects />} />
+				<Route path="/tic-tac-toe" element={<TicTacToe />} />
 			</Routes>
 			<FooterComp />
 		</BrowserRouter>

@@ -28,14 +28,14 @@ const FooterComp = () => {
 						</Link>
 					</div>
 					<div
-						className="grid grid-cols-2 gap-8 sm:grid-cols-2 sm:gap-16 mt-4 sm:mt-0 text-center
-						bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg px-7 py-2">
+						className="grid grid-cols-2 gap-8 lg:grid-cols-4 sm:gap-10 mt-4 sm:mt-0 text-center
+						bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg px-7 py-4">
 						<div>
-							<Footer.Title title="About" />
+							<Footer.Title title="My Projects" />
 							<Footer.LinkGroup col className="space-y-2">
 								<Footer.Link
 									className="m-0 p-0"
-									href="/about"
+									href="/"
 									target="_blank"
 									rel="noopener noreferrer">
 									{"Usman's Blog"}
@@ -44,19 +44,24 @@ const FooterComp = () => {
 									href="https://usmanestate.onrender.com/"
 									target="_blank"
 									rel="noopener noreferrer">
-									My Project
+									Real Estate
 								</Footer.Link>
 							</Footer.LinkGroup>
 						</div>
-						{/* <div>
-							<Footer.Title title="Legal" />
-							<Footer.LinkGroup col className="space-y-2">
-								<Footer.Link href="#">Privacy Policy</Footer.Link>
-								<Footer.Link href="#">Terms & Conditions</Footer.Link>
-							</Footer.LinkGroup>
-						</div> */}
 						<div>
-							<Footer.Title title="Follow us" />
+							<Footer.Title title="My Games" />
+							<Footer.LinkGroup col className="space-y-2">
+								<Footer.Link
+									className="m-0 p-0"
+									href="/tic-tac-toe"
+									target="_blank"
+									rel="noopener noreferrer">
+									Tic Tac Toe
+								</Footer.Link>
+							</Footer.LinkGroup>
+						</div>
+						<div>
+							<Footer.Title title="Follow me" />
 							<Footer.LinkGroup col className="space-y-2">
 								<Footer.Link
 									href="https://www.linkedin.com"
@@ -70,6 +75,13 @@ const FooterComp = () => {
 									rel="noopener noreferrer">
 									Github
 								</Footer.Link>
+							</Footer.LinkGroup>
+						</div>
+						<div>
+							<Footer.Title title="Legal" />
+							<Footer.LinkGroup col className="space-y-2">
+								<Footer.Link href="#">Privacy Policy</Footer.Link>
+								<Footer.Link href="#">Terms & Conditions</Footer.Link>
 							</Footer.LinkGroup>
 						</div>
 					</div>
