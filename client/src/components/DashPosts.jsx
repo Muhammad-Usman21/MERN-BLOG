@@ -46,7 +46,7 @@ const DashPosts = () => {
 				}
 			}
 		} catch (error) {
-			console.log(error);
+			console.log(error.message);
 		}
 	};
 
@@ -68,7 +68,7 @@ const DashPosts = () => {
 				);
 			}
 		} catch (error) {
-			console.log(error);
+			console.log(error.message);
 		}
 	};
 
