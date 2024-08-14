@@ -39,13 +39,13 @@ const Header = () => {
 
 	return (
 		<Navbar
-			className="border-b-2 border-teal-600 lg:px-14 bg-cover bg-center 
+			className="border-b-2 border-teal-600 lg:px-14 bg-cover bg-center sticky top-0 z-20
 			bg-[url('../../h&f-light.jpg')] dark:bg-[url('../../header-dark.jpg')]">
 			<Link
 				to="/"
-				className="font-semibold dark:text-white text-xl flex items-center">
+				className="font-semibold dark:text-white text-md sm:text-xl flex items-center">
 				<HoverBorder>{"Usman's"}</HoverBorder>
-				<span className="ml-2 text-3xl">Blog</span>
+				<span className="ml-1 text-xl sm:ml-2 sm:3xl">Blog</span>
 			</Link>
 			<form>
 				<TextInput
@@ -55,14 +55,14 @@ const Header = () => {
 					className="hidden lg:inline"></TextInput>
 			</form>
 			<Button
-				className="w-10 h-10 lg:hidden focus:ring-1 items-center"
+				className="w-8 h-8 sm:w-10 sm:h-10 lg:hidden focus:ring-1 items-center"
 				color="gray"
 				pill>
 				<AiOutlineSearch />
 			</Button>
 			<div className=" flex gap-2 md:order-2 items-center">
 				<Button
-					className="w-15 h-10 hidden sm:inline focus:ring-1 items-center"
+					className="w-8 h-8 sm:w-10 sm:h-10 focus:ring-1 items-center"
 					color="gray"
 					pill
 					onClick={() => dispatch(toggleTheme())}>
@@ -104,6 +104,7 @@ const Header = () => {
 				<Navbar.Toggle />
 			</div>
 			<Navbar.Collapse>
+				<Navbar.Link className="h-0 p-0 m-0"></Navbar.Link>
 				<Link to="/">
 					<Navbar.Link active={path === "/"} as={"div"}>
 						Home

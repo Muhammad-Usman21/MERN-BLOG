@@ -40,10 +40,24 @@ nav[aria-label="Sidebar"].dark > div {
 	nav[aria-label="Sidebar"].light > div {
 		border-right: 2px solid #047481;
 		border-bottom: none;
+		overflow: unset;
 	}
 
 	nav[aria-label="Sidebar"].dark > div {
 		border-right: 2px solid #374151;
 		border-bottom: none;
+		overflow: unset;
+	}
+
+	[data-testid="flowbite-sidebar-items"] {
+		background-color: transparent;
+		border: 2px solid rgba(255, 255, 255, 0.2);
+		backdrop-filter: blur(9px);
+		border-radius: 0.5rem;
+		box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+		padding: 8px;
+		margin: 5px 3px;
+		position: sticky;
+		top: 90px;
 	}
 }

@@ -18,7 +18,7 @@ const FooterComp = () => {
 			className="rounded-none border-t-4 border-teal-700 dark:border-[#374151] bg-cover bg-center 
 			bg-[url('../../h&f-light.jpg')] dark:bg-[url('../../footer-dark.jpg')]">
 			<div className="w-full max-w-7xl mx-auto">
-				<div className="flex flex-col items-center gap-8 w-full sm:flex-row sm:justify-between">
+				<div className="flex flex-col items-center gap-4 w-full sm:flex-row sm:justify-between">
 					<div className="mt-4 sm:mt-0">
 						<Link
 							to="/"
@@ -28,8 +28,8 @@ const FooterComp = () => {
 						</Link>
 					</div>
 					<div
-						className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-8 mt-4 sm:mt-0 text-center
-						bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg p-3">
+						className="grid grid-cols-2 gap-8 sm:grid-cols-2 sm:gap-16 mt-4 sm:mt-0 text-center
+						bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg px-7 py-2">
 						<div>
 							<Footer.Title title="About" />
 							<Footer.LinkGroup col className="space-y-2">
@@ -48,13 +48,13 @@ const FooterComp = () => {
 								</Footer.Link>
 							</Footer.LinkGroup>
 						</div>
-						<div>
+						{/* <div>
 							<Footer.Title title="Legal" />
 							<Footer.LinkGroup col className="space-y-2">
 								<Footer.Link href="#">Privacy Policy</Footer.Link>
 								<Footer.Link href="#">Terms & Conditions</Footer.Link>
 							</Footer.LinkGroup>
-						</div>
+						</div> */}
 						<div>
 							<Footer.Title title="Follow us" />
 							<Footer.LinkGroup col className="space-y-2">

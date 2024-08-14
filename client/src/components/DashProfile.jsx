@@ -484,7 +484,7 @@ const DashProfile = () => {
 						type="submit"
 						gradientDuoTone="purpleToBlue"
 						outline
-						className="uppercase focus:ring-1"
+						className="uppercase focus:ring-1 mt-1"
 						disabled={updateUserLoading || myMessages.updateUserErrorMsg}>
 						{updateUserLoading ? (
 							<>
@@ -502,13 +502,13 @@ const DashProfile = () => {
 						<Button
 							type="button"
 							gradientDuoTone="purpleToPink"
-							className="uppercase focus:ring-1 mt-3 w-full">
+							className="uppercase focus:ring-1 mt-4 w-full">
 							Create a post
 						</Button>
 					</Link>
 				)}
 
-				<div className="text-red-500 flex justify-between mt-2 mb-4 mx-1">
+				<div className="text-red-500 flex justify-between my-3 mx-1">
 					<span onClick={() => setShowModal(true)} className="cursor-pointer ">
 						Delete Account
 					</span>

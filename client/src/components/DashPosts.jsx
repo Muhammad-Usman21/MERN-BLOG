@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 const DashPosts = () => {
 	const { currentUser } = useSelector((state) => state.user);
 	const [userPosts, setUserPosts] = useState([]);
+	const [showMore, setShowMore] = useState(true);
 
 	useEffect(() => {
 		const fetchPosts = async () => {
@@ -14,6 +15,9 @@ const DashPosts = () => {
 				const data = await res.json();
 				if (res.ok) {
 					setUserPosts(data.posts);
+					if (data.posts.length < 9) {
+						setShowMore(false);
+					}
 				}
 			} catch (error) {
 				console.log(error.message);
@@ -25,19 +29,40 @@ const DashPosts = () => {
 		}
 	}, [currentUser._id]);
 
+	const handleShowMore = async () => {
+		const startIndex = userPosts.length;
+		try {
+			const res = await fetch(
+				`/api/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`
+			);
+			const data = await res.json();
+			if (res.ok) {
+				setUserPosts((prevPosts) => [...prevPosts, ...data.posts]);
+				if (data.posts.length < 9) {
+					setShowMore(false);
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<div
-			className="p-10 w-full bg-cover bg-center
-			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg2-dark.jpg')]">
+			className="flex p-10 w-full bg-cover bg-center
+			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg-dark.jpg')]">
 			<div
-				className="overflow-x-scroll p-3
+				className="overflow-x-scroll p-3 xl:overflow-visible
 				scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
 				 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500
-				 bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg">
+				 bg-transparent border-2 border-white/20 rounded-lg shadow-lg">
 				{currentUser.isAdmin && userPosts.length > 0 ? (
 					<>
-						<Table hoverable className="shadow-md">
-							<Table.Head>
+						<Table
+							hoverable
+							className="backdrop-blur-[9px] bg-transparent border-2 border-white/20 
+							rounded-lg shadow-lg">
+							<Table.Head className=" xl:sticky xl:top-[68px]">
 								<Table.HeadCell>Date updated</Table.HeadCell>
 								<Table.HeadCell>Post Image</Table.HeadCell>
 								<Table.HeadCell>Post Title</Table.HeadCell>
@@ -77,13 +102,24 @@ const DashPosts = () => {
 										</Table.Cell>
 										<Table.Cell>
 											<Link to={`/update-post/${post._id}`}>
-												<span className="text-teal-500">Edit</span>
+												<span className="text-teal-500 dark:text-gray-400">
+													Edit
+												</span>
 											</Link>
 										</Table.Cell>
 									</Table.Row>
 								))}
 							</Table.Body>
 						</Table>
+						{showMore && (
+							<div className="flex w-full">
+								<button
+									onClick={handleShowMore}
+									className="text-teal-500 dark:text-gray-400 mx-auto text-sm py-4">
+									Show more
+								</button>
+							</div>
+						)}
 					</>
 				) : (
 					<p>You have no posts yet</p>
