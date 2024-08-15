@@ -121,14 +121,14 @@ const SignIn = () => {
 					{errorMessage && (
 						<div className="flex items-center gap-1 mt-4">
 							<Alert className="flex-auto" color="failure" withBorderAccent>
-								<div className="flex gap-3">
+								<div className="flex justify-between">
+									<span>{errorMessage}</span>
 									<span className="w-5 h-5">
 										<MdCancelPresentation
 											className="cursor-pointer w-6 h-6"
 											onClick={() => setErrorMessage(null)}
 										/>
 									</span>
-									<span>{errorMessage}</span>
 								</div>
 							</Alert>
 						</div>

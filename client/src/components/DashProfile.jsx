@@ -380,7 +380,9 @@ const DashProfile = () => {
 			<div
 				className="max-w-xl my-10 mx-7 p-7 sm:mx-12 lg:mx-auto sm:p-10 self-center
 			bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg">
-				<h1 className="mt-2 mb-4 text-center font-semibold text-3xl">Profile</h1>
+				<h1 className="mt-2 mb-4 text-center font-semibold text-3xl">
+					Profile
+				</h1>
 				<form className="flex flex-col gap-3" onSubmit={handleUpdateUserSubmit}>
 					<input
 						type="file"
@@ -525,18 +527,7 @@ const DashProfile = () => {
 									className="flex-auto"
 									color={msg.includes("Error") ? "failure" : "success"}
 									withBorderAccent>
-									<div className="flex gap-3">
-										<span className="w-5 h-5">
-											<MdCancelPresentation
-												className="cursor-pointer w-6 h-6"
-												onClick={() => {
-													setMyMessages((prevMessages) => ({
-														...prevMessages,
-														[msg]: null,
-													}));
-												}}
-											/>
-										</span>
+									<div className="flex justify-between">
 										<span>
 											{value}
 											{value.includes("Invalid password.") && (
@@ -547,6 +538,17 @@ const DashProfile = () => {
 													Forget Password?
 												</span>
 											)}
+										</span>
+										<span className="w-5 h-5">
+											<MdCancelPresentation
+												className="cursor-pointer w-6 h-6"
+												onClick={() => {
+													setMyMessages((prevMessages) => ({
+														...prevMessages,
+														[msg]: null,
+													}));
+												}}
+											/>
 										</span>
 									</div>
 								</Alert>

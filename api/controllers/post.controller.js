@@ -7,7 +7,15 @@ export const create = async (req, res, next) => {
 	}
 
 	if (!req.body.title || !req.body.content) {
-		return next(errorHandler(400, "Please provide all required fields"));
+		return next(errorHandler(400, "Title and Content are required fields!"));
+	}
+
+	const title = req.body.title;
+	const checkTitle = await Post.findOne({ title });
+	if (checkTitle) {
+		return next(
+			errorHandler(400, "This title already exists. Try another one!")
+		);
 	}
 
 	const slug = req.body.title
@@ -15,6 +23,13 @@ export const create = async (req, res, next) => {
 		.join("-")
 		.toLowerCase()
 		.replace(/[^a-zA-Z0-9]/g, "-");
+
+	const checkSlug = await Post.findOne({ slug });
+	if (checkSlug) {
+		return next(
+			errorHandler(400, "This title already exists. Try another one!")
+		);
+	}
 
 	const newPost = new Post({
 		...req.body,
