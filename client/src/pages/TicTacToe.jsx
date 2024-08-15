@@ -81,14 +81,25 @@ const TicTacToe = () => {
 
 	useEffect(() => {
 		if (dataX.length >= 3) {
-			const result = (dataX, winning) => {
-				return winning.some((win) =>
+			const checkWinning = (dataX, winning) => {
+				return winning.filter((win) =>
 					win.every((index) => dataX.includes(index))
 				);
 			};
-			if (result(dataX, winning)) {
+
+			const result = checkWinning(dataX, winning);
+			if (result.length > 0) {
 				setGameOver("X");
 				setXturn(true);
+				// console.log(result);
+				result.map((innerResult, outerIndex) => {
+					innerResult.map((item, innerIndex) => {
+						setPrint((prevPrint) => ({
+							...prevPrint,
+							[item]: "greenX",
+						}));
+					});
+				});
 				return;
 			}
 		}
@@ -107,14 +118,25 @@ const TicTacToe = () => {
 
 	useEffect(() => {
 		if (dataO.length >= 3) {
-			const result = (dataO, winning) => {
-				return winning.some((win) =>
+			const checkWinning = (dataO, winning) => {
+				return winning.filter((win) =>
 					win.every((index) => dataO.includes(index))
 				);
 			};
-			if (result(dataO, winning)) {
+
+			const result = checkWinning(dataO, winning);
+			if (result.length > 0) {
 				setGameOver("O");
 				setXturn(false);
+				// console.log(result);
+				result.map((innerResult, outerIndex) => {
+					innerResult.map((item, innerIndex) => {
+						setPrint((prevPrint) => ({
+							...prevPrint,
+							[item]: "greenO",
+						}));
+					});
+				});
 				return;
 			}
 		}
@@ -266,6 +288,7 @@ export default TicTacToe;
 
 const Block = ({ handleChange, gameOver, btn, b }) => {
 	const isRed = btn?.includes("red");
+	const isGreen = btn?.includes("green");
 	const isDisabled = btn?.includes("X") || btn?.includes("O") || gameOver;
 	const btnText = btn?.includes("X") ? " X" : btn?.includes("O") ? "O" : "";
 
@@ -274,9 +297,15 @@ const Block = ({ handleChange, gameOver, btn, b }) => {
 			id={b}
 			value={b}
 			onClick={handleChange}
-			className={`w-20 h-20 md:w-32 md:h-32 text-5xl md:text-8xl rounded-lg bg-cyan-300 
-                        disabled:bg-cyan-600 hover:opacity-80 disabled:cursor-not-allowed
-                        ${isRed ? "text-red-600" : "text-white"}`}
+			className={`w-20 h-20 md:w-32 md:h-32 text-5xl md:text-8xl rounded-lg bg-gray-100 dark:bg-gray-600
+                        disabled:bg-gray-300 dark:disabled:bg-gray-800 hover:opacity-80 disabled:cursor-not-allowed
+                        ${
+													isRed
+														? "text-red-500"
+														: isGreen
+														? "text-green-400"
+														: "text-gray-600 dark:text-gray-300"
+												}`}
 			disabled={isDisabled}>
 			{btnText}
 		</button>

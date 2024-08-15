@@ -70,7 +70,7 @@ const Header = () => {
 				</Button>
 				{currentUser ? (
 					<Dropdown
-						className="z-20"
+						className={`z-20 ${theme}`}
 						arrowIcon={false}
 						inline
 						label={
@@ -103,7 +103,7 @@ const Header = () => {
 				)}
 				<Navbar.Toggle />
 			</div>
-			<Navbar.Collapse>
+			<Navbar.Collapse className={`${theme}`}>
 				<Navbar.Link className="h-0 p-0 m-0"></Navbar.Link>
 				<Link to="/">
 					<Navbar.Link active={path === "/"} as={"div"}>

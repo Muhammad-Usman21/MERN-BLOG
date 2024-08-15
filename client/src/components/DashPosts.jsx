@@ -1,4 +1,4 @@
-import { Button, Modal, Table } from "flowbite-react";
+import { Button, Modal, Spinner, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
@@ -6,12 +6,15 @@ import { Link } from "react-router-dom";
 
 const DashPosts = () => {
 	const { currentUser } = useSelector((state) => state.user);
+	const { theme } = useSelector((state) => state.theme);
 	const [userPosts, setUserPosts] = useState([]);
 	const [showMore, setShowMore] = useState(true);
 	const [showModal, setShowModal] = useState(false);
 	const [postIdToDelete, setPostIdToDelete] = useState(null);
+	const [getPostsLoading, setGetPostsLoading] = useState(false);
 
 	useEffect(() => {
+		setGetPostsLoading(true);
 		const fetchPosts = async () => {
 			try {
 				const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`);
@@ -21,9 +24,11 @@ const DashPosts = () => {
 					if (data.posts.length < 9) {
 						setShowMore(false);
 					}
+					setGetPostsLoading(false);
 				}
 			} catch (error) {
 				console.log(error.message);
+				setGetPostsLoading(false);
 			}
 		};
 
@@ -74,15 +79,19 @@ const DashPosts = () => {
 
 	return (
 		<div
-			className="flex p-10 w-full bg-cover bg-center
+			className="flex p-10 w-full bg-cover bg-center justify-center
 			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg-dark.jpg')]">
-			<div
-				className="overflow-x-scroll p-3 xl:overflow-visible
-				scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
-				 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500
-				 bg-transparent border-2 border-white/20 rounded-lg shadow-lg">
-				{currentUser.isAdmin && userPosts.length > 0 ? (
-					<>
+			{getPostsLoading ? (
+				<div className="self-center mb-96">
+					<Spinner size="xl" />
+				</div>
+			) : currentUser.isAdmin && userPosts.length > 0 ? (
+				<>
+					<div
+						className="overflow-x-scroll p-3 xl:overflow-visible max-w-5xl w-full
+					scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
+					 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500
+					 bg-transparent border-2 border-white/20 rounded-lg shadow-lg">
 						<Table
 							hoverable
 							className="backdrop-blur-[9px] bg-transparent border-2 border-white/20 
@@ -150,13 +159,18 @@ const DashPosts = () => {
 								</button>
 							</div>
 						)}
-					</>
-				) : (
-					<p>You have no posts yet</p>
-				)}
-			</div>
+					</div>
+				</>
+			) : (
+				<div
+					className="self-center max-w-xl w-full bg-transparent border-2 
+				border-white/20 rounded-lg shadow-lg backdrop-blur-[9px] mb-96">
+					<p className="p-10 text-center">You have no posts yet</p>
+				</div>
+			)}
 
 			<Modal
+				className={`${theme}`}
 				show={showModal}
 				onClose={() => {
 					setShowModal(false);
@@ -169,15 +183,12 @@ const DashPosts = () => {
 						className="flex flex-col text-center"
 						onSubmit={handleDeletePostSubmit}>
 						<div className="flex items-center mb-8 gap-8 self-center">
-							<HiOutlineExclamationCircle
-								className="h-14 w-14 text-gray-400 dark:text-gray-200 
-							dark:bg-black"
-							/>
-							<span className="text-2xl text-gray-500 dark:text-gray-300">
+							<HiOutlineExclamationCircle className="h-14 w-14 text-gray-500 dark:text-gray-200" />
+							<span className="text-2xl text-gray-600 dark:text-gray-200">
 								Delete Post
 							</span>
 						</div>
-						<h3 className="my-5 text-lg text-gray-500 dark:text-gray-300">
+						<h3 className="my-5 text-lg text-gray-600 dark:text-gray-300">
 							Are you sure you want to delete this Post?
 						</h3>
 						<div className="flex justify-around">
@@ -188,7 +199,7 @@ const DashPosts = () => {
 								type="button"
 								color="gray"
 								onClick={() => setShowModal(false)}
-								className="focus:ring-1">
+								className="focus:ring-1 dark:text-gray-300">
 								No, cancel
 							</Button>
 						</div>

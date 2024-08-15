@@ -20,6 +20,7 @@ body {
 
 nav[aria-label="Sidebar"] {
 	border: none;
+	border-radius: 0;
 }
 
 nav[aria-label="Sidebar"].light > div {
@@ -27,6 +28,7 @@ nav[aria-label="Sidebar"].light > div {
 	background-size: cover;
 	background-position: center;
 	border-bottom: 2px solid #047481;
+	border-radius: 0;
 }
 
 nav[aria-label="Sidebar"].dark > div {
@@ -34,6 +36,7 @@ nav[aria-label="Sidebar"].dark > div {
 	background-size: cover;
 	background-position: center;
 	border-bottom: 2px solid #374151;
+	border-radius: 0;
 }
 
 [data-testid="flowbite-alert-wrapper"] > div {
@@ -64,4 +67,99 @@ nav[aria-label="Sidebar"].dark > div {
 		position: sticky;
 		top: 90px;
 	}
+}
+
+[data-testid="flowbite-dropdown"].light {
+	background-image: url("../sidebar-light.jpg");
+	background-size: cover;
+	background-position: center;
+	/* border-bottom: 2px solid #047481; */
+	border-radius: 0.5rem;
+}
+
+[data-testid="flowbite-dropdown"].dark {
+	background-image: url("../bg3-dark.jpg");
+	background-size: cover;
+	background-position: center;
+	/* border-bottom: 2px solid #374151; */
+	border-radius: 0.5rem;
+}
+
+[data-testid="flowbite-dropdown"].light > ul {
+	background-color: transparent;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(4px);
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+[data-testid="flowbite-dropdown"].dark > ul {
+	background-color: transparent;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(4px);
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+	[data-testid="flowbite-navbar-collapse"].light > ul {
+		background-color: transparent;
+		border: 2px solid rgba(255, 255, 255, 0.2);
+		backdrop-filter: blur(4px);
+		border-radius: 0.5rem;
+		box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+		align-items: center;
+	}
+
+	[data-testid="flowbite-navbar-collapse"].dark > ul {
+		background-color: transparent;
+		border: 2px solid rgba(255, 255, 255, 0.2);
+		backdrop-filter: blur(4px);
+		border-radius: 0.5rem;
+		box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+		align-items: center;
+	}
+
+	[data-testid="flowbite-navbar-collapse"] > ul > a {
+		width: 100%;
+	}
+
+	[data-testid="flowbite-navbar-collapse"] > ul > a > li > div {
+		text-align: center;
+		border-radius: 0.5rem;
+	}
+}
+
+[data-testid="modal-overlay"].light > div {
+	background-image: url("../sidebar-light.jpg");
+	background-size: cover;
+	background-position: center;
+	/* border-bottom: 2px solid #047481; */
+	border-radius: 0.5rem;
+	padding: 0;
+}
+
+[data-testid="modal-overlay"].dark > div {
+	background-image: url("../bg3-dark.jpg");
+	background-size: cover;
+	background-position: center;
+	/* border-bottom: 2px solid #374151; */
+	border-radius: 0.5rem;
+	padding: 0;
+}
+
+[data-testid="modal-overlay"].light > div > div {
+	background-color: transparent;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(4px);
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+[data-testid="modal-overlay"].dark > div > div {
+	background-color: transparent;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(4px);
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
 }

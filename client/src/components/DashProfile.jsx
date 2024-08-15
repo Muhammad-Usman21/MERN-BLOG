@@ -24,6 +24,7 @@ import { Link } from "react-router-dom";
 
 const DashProfile = () => {
 	const { currentUser } = useSelector((state) => state.user);
+	const { theme } = useSelector((state) => state.theme);
 	const [imageFile, setImageFile] = useState(null);
 	const [imageFileUrl, setImageFileUrl] = useState(null);
 	const [imageFileUploading, setImageFileUploading] = useState(false);
@@ -557,6 +558,7 @@ const DashProfile = () => {
 				)}
 
 				<Modal
+					className={`${theme}`}
 					show={showModal}
 					onClose={() => {
 						setShowModal(false);
@@ -570,16 +572,13 @@ const DashProfile = () => {
 							className="flex flex-col text-center"
 							onSubmit={handleDeleteUserSubmit}>
 							<div className="flex items-center mb-8 gap-8 self-center">
-								<HiOutlineExclamationCircle
-									className="h-14 w-14 text-gray-400 dark:text-gray-200 
-							dark:bg-black"
-								/>
-								<span className="text-2xl text-gray-500 dark:text-gray-300">
+								<HiOutlineExclamationCircle className="h-14 w-14 text-gray-500 dark:text-gray-200" />
+								<span className="text-2xl text-gray-600 dark:text-gray-200">
 									Delete Account
 								</span>
 							</div>
 							{!currentUser.googleAuth && (
-								<div className="flex items-center">
+								<div className="flex items-center p-2">
 									<TextInput
 										type="password"
 										id="password"
@@ -596,7 +595,7 @@ const DashProfile = () => {
 									</span>
 								</div>
 							)}
-							<h3 className="my-5 text-lg text-gray-500 dark:text-gray-300">
+							<h3 className="my-5 text-lg text-gray-600 dark:text-gray-300">
 								Are you sure you want to delete your account?
 							</h3>
 							<div className="flex justify-around">
@@ -611,7 +610,7 @@ const DashProfile = () => {
 									type="button"
 									color="gray"
 									onClick={() => setShowModal(false)}
-									className="focus:ring-1">
+									className="focus:ring-1 dark:text-gray-300">
 									No, cancel
 								</Button>
 							</div>
