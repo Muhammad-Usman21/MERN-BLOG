@@ -80,7 +80,7 @@ const DashPosts = () => {
 	return (
 		<div
 			className="flex p-10 w-full bg-cover bg-center justify-center
-			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg-dark.jpg')]">
+			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg2-dark.jpg')]">
 			{getPostsLoading ? (
 				<div className="self-center mb-96">
 					<Spinner size="xl" />
@@ -91,7 +91,7 @@ const DashPosts = () => {
 						className="overflow-x-scroll p-3 xl:overflow-visible max-w-5xl w-full
 					scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
 					 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500
-					 bg-transparent border-2 border-white/20 rounded-lg shadow-lg">
+					 bg-transparent border-2 border-white/40 dark:border-white/20 rounded-lg shadow-xl">
 						<Table
 							hoverable
 							className="backdrop-blur-[9px] bg-transparent border-2 border-white/20 
@@ -164,7 +164,7 @@ const DashPosts = () => {
 			) : (
 				<div
 					className="self-center max-w-xl w-full bg-transparent border-2 
-				border-white/20 rounded-lg shadow-lg backdrop-blur-[9px] mb-96">
+				border-white/40 dark:border-white/20 rounded-lg shadow-lg backdrop-blur-[9px] mb-96">
 					<p className="p-10 text-center">You have no posts yet</p>
 				</div>
 			)}
@@ -180,7 +180,7 @@ const DashPosts = () => {
 				<Modal.Header />
 				<Modal.Body>
 					<form
-						className="flex flex-col text-center"
+						className={`flex flex-col text-center ${theme}`}
 						onSubmit={handleDeletePostSubmit}>
 						<div className="flex items-center mb-8 gap-8 self-center">
 							<HiOutlineExclamationCircle className="h-14 w-14 text-gray-500 dark:text-gray-200" />

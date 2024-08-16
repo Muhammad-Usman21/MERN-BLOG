@@ -47,7 +47,7 @@ const Header = () => {
 				<HoverBorder>{"Usman's"}</HoverBorder>
 				<span className="ml-1 text-xl sm:ml-2 sm:3xl">Blog</span>
 			</Link>
-			<form>
+			<form className={`header-search-form ${theme}`}>
 				<TextInput
 					type="text"
 					placeholder="Search..."

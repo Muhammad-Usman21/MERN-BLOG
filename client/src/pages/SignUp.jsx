@@ -5,6 +5,7 @@ import OAuth from "../components/OAuth";
 import { HoverBorder } from "../components/extra/HoverBorder";
 import { BiSolidShow, BiSolidHide } from "react-icons/bi";
 import { MdCancelPresentation } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 const SignUp = () => {
 	const [formData, setFormData] = useState({});
@@ -12,6 +13,7 @@ const SignUp = () => {
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
+	const { theme } = useSelector((state) => state.theme);
 
 	const handleChange = (e) => {
 		// console.log(e.target.value);
@@ -67,11 +69,13 @@ const SignUp = () => {
 			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg-dark.jpg')]">
 			<div
 				className="flex p-10 max-w-3xl mx-10 sm:mx-14 md:mx-20 lg:mx-auto flex-col md:flex-row md:items-center gap-10
-				bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg">
+				bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 				<div className="flex-1">
 					<Link
 						to="/"
-						className="font-semibold dark:text-white text-3xl flex items-center">
+						className="font-semibold dark:text-white text-3xl flex items-center
+						bg-transparent border-2 border-white/60 dark:border-0 dark:p-[14px] 
+						backdrop-blur-[9px] rounded-full shadow-xl p-3">
 						<HoverBorder>{"Usman's"}</HoverBorder>
 						<span className="ml-2 text-4xl">Blog</span>
 					</Link>
@@ -80,8 +84,10 @@ const SignUp = () => {
 						or with Google.
 					</p>
 				</div>
-				<div className="flex-1 pt-5 border-t-2 md:pt-0 md:border-t-0 md:pl-5 md:border-l-2">
-					<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+				<div className="flex-1 pt-5 border-t-2 md:pt-0 md:border-t-0 md:pl-5 md:border-l-2 border-gray-400">
+					<form
+						className={`flex flex-col gap-4 ${theme}`}
+						onSubmit={handleSubmit}>
 						<div>
 							<Label value="Your username" />
 							<TextInput

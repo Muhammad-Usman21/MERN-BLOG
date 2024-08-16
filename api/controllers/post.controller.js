@@ -14,7 +14,10 @@ export const create = async (req, res, next) => {
 	const checkTitle = await Post.findOne({ title });
 	if (checkTitle) {
 		return next(
-			errorHandler(400, "This title already exists. Try another one!")
+			errorHandler(
+				400,
+				"This Title already exists. Try another one!\nTry not to use special characters in title."
+			)
 		);
 	}
 
@@ -105,6 +108,35 @@ export const updatepost = async (req, res, next) => {
 	if (!req.user.isAdmin || req.user.id !== req.params.userId) {
 		return next(errorHandler("You are not allowed to update this post"));
 	}
+	if (!req.body.title || !req.body.content) {
+		return next(errorHandler(400, "Title and Content are required fields!"));
+	}
+
+	const title = req.body.title;
+	const slug = req.body.title
+		.split(" ")
+		.join("-")
+		.toLowerCase()
+		.replace(/[^a-zA-Z0-9]/g, "-");
+
+	const checkTitle = await Post.findOne({ title });
+	const checkPost = await Post.findById(req.params.postId);
+	if (checkTitle && title !== checkPost?.title) {
+		return next(
+			errorHandler(400, "This title already exists. Try another one!")
+		);
+	} else if (!checkTitle) {
+		const checkSlug = await Post.findOne({ slug });
+		if (checkSlug) {
+			return next(
+				errorHandler(
+					400,
+					"This title already exists. Try another one!\nTry not to use special characters in title."
+				)
+			);
+		}
+	}
+
 	try {
 		const updatedPost = await Post.findByIdAndUpdate(
 			req.params.postId,
@@ -114,6 +146,7 @@ export const updatepost = async (req, res, next) => {
 					content: req.body.content,
 					category: req.body.category,
 					image: req.body.image,
+					slug,
 				},
 			},
 			{ new: true }

@@ -10,10 +10,6 @@ body {
 	object-fit: cover;
 }
 
-.ql-editor {
-	font-size: 1.05rem;
-}
-
 [data-testid="footer-groupLink"] > li {
 	margin: 0;
 }
@@ -23,101 +19,87 @@ nav[aria-label="Sidebar"] {
 	border-radius: 0;
 }
 
-nav[aria-label="Sidebar"].light > div {
-	background-image: url("../sidebar-light.jpg");
+nav[aria-label="Sidebar"] > div {
 	background-size: cover;
 	background-position: center;
-	border-bottom: 2px solid #047481;
 	border-radius: 0;
+}
+
+nav[aria-label="Sidebar"].light > div {
+	background-image: url("../sidebar-light.jpg");
+	border-bottom: 2px solid #047481;
 }
 
 nav[aria-label="Sidebar"].dark > div {
 	background-image: url("../sidebar-dark.jpg");
-	background-size: cover;
-	background-position: center;
 	border-bottom: 2px solid #374151;
-	border-radius: 0;
 }
 
 [data-testid="flowbite-alert-wrapper"] > div {
 	width: 100%;
 }
 
+[data-testid="flowbite-dropdown"].light,
+[data-testid="modal-overlay"].light > div {
+	background-image: url("../sidebar-light.jpg");
+}
+
+[data-testid="flowbite-dropdown"].dark,
+[data-testid="modal-overlay"].dark > div {
+	background-image: url("../bg3-dark.jpg");
+}
+
+[data-testid="flowbite-dropdown"],
+[data-testid="modal-overlay"] > div {
+	background-size: cover !important;
+	background-position: center !important;
+	border-radius: 0.5rem !important;
+	padding: 0 !important;
+}
+
+[data-testid="flowbite-dropdown"] > ul,
+[data-testid="modal-overlay"] > div > div {
+	background-color: transparent !important;
+	border: 2px solid rgba(255, 255, 255, 0.2) !important;
+	backdrop-filter: blur(4px) !important;
+	border-radius: 0.5rem !important;
+	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
 @media (min-width: 768px) {
-	nav[aria-label="Sidebar"].light > div {
-		border-right: 2px solid #047481;
+	nav[aria-label="Sidebar"] > div {
 		border-bottom: none;
 		overflow: unset;
+	}
+	nav[aria-label="Sidebar"].light > div {
+		border-right: 2px solid #047481;
 	}
 
 	nav[aria-label="Sidebar"].dark > div {
 		border-right: 2px solid #374151;
-		border-bottom: none;
-		overflow: unset;
 	}
 
 	[data-testid="flowbite-sidebar-items"] {
-		background-color: transparent;
-		border: 2px solid rgba(255, 255, 255, 0.2);
-		backdrop-filter: blur(9px);
-		border-radius: 0.5rem;
-		box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-		padding: 8px;
-		margin: 5px 3px;
+		background-color: transparent !important;
+		border: 2px solid rgba(255, 255, 255, 0.2) !important;
+		backdrop-filter: blur(9px) !important;
+		border-radius: 0.5rem !important;
+		box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+		padding: 8px !important;
+		margin: 5px 3px !important;
 		position: sticky;
 		top: 90px;
 	}
 }
 
-[data-testid="flowbite-dropdown"].light {
-	background-image: url("../sidebar-light.jpg");
-	background-size: cover;
-	background-position: center;
-	/* border-bottom: 2px solid #047481; */
-	border-radius: 0.5rem;
-}
-
-[data-testid="flowbite-dropdown"].dark {
-	background-image: url("../bg3-dark.jpg");
-	background-size: cover;
-	background-position: center;
-	/* border-bottom: 2px solid #374151; */
-	border-radius: 0.5rem;
-}
-
-[data-testid="flowbite-dropdown"].light > ul {
-	background-color: transparent;
-	border: 2px solid rgba(255, 255, 255, 0.2);
-	backdrop-filter: blur(4px);
-	border-radius: 0.5rem;
-	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-[data-testid="flowbite-dropdown"].dark > ul {
-	background-color: transparent;
-	border: 2px solid rgba(255, 255, 255, 0.2);
-	backdrop-filter: blur(4px);
-	border-radius: 0.5rem;
-	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
 @media (max-width: 768px) {
-	[data-testid="flowbite-navbar-collapse"].light > ul {
-		background-color: transparent;
-		border: 2px solid rgba(255, 255, 255, 0.2);
-		backdrop-filter: blur(4px);
-		border-radius: 0.5rem;
-		box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-		align-items: center;
-	}
-
-	[data-testid="flowbite-navbar-collapse"].dark > ul {
-		background-color: transparent;
-		border: 2px solid rgba(255, 255, 255, 0.2);
-		backdrop-filter: blur(4px);
-		border-radius: 0.5rem;
-		box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-		align-items: center;
+	[data-testid="flowbite-navbar-collapse"] > ul {
+		background-color: transparent !important;
+		border: 2px solid rgba(255, 255, 255, 0.2) !important;
+		backdrop-filter: blur(4px) !important;
+		border-radius: 0.5rem !important;
+		box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+		align-items: center !important;
 	}
 
 	[data-testid="flowbite-navbar-collapse"] > ul > a {
@@ -128,38 +110,37 @@ nav[aria-label="Sidebar"].dark > div {
 		text-align: center;
 		border-radius: 0.5rem;
 	}
+
+	[data-testid="flowbite-navbar-collapse"] > ul > a > li > div :active {
+		background-color: #2f3339 !important;
+	}
 }
 
-[data-testid="modal-overlay"].light > div {
-	background-image: url("../sidebar-light.jpg");
-	background-size: cover;
-	background-position: center;
-	/* border-bottom: 2px solid #047481; */
-	border-radius: 0.5rem;
-	padding: 0;
+.ql-editor {
+	font-size: 1.05rem !important;
 }
 
-[data-testid="modal-overlay"].dark > div {
-	background-image: url("../bg3-dark.jpg");
-	background-size: cover;
-	background-position: center;
-	/* border-bottom: 2px solid #374151; */
-	border-radius: 0.5rem;
-	padding: 0;
+.ql-editor.ql-blank::before {
+	color: gray !important;
 }
 
-[data-testid="modal-overlay"].light > div > div {
-	background-color: transparent;
-	border: 2px solid rgba(255, 255, 255, 0.2);
-	backdrop-filter: blur(4px);
-	border-radius: 0.5rem;
-	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+.header-search-form > div > div > div {
+	z-index: 30;
 }
 
-[data-testid="modal-overlay"].dark > div > div {
-	background-color: transparent;
-	border: 2px solid rgba(255, 255, 255, 0.2);
-	backdrop-filter: blur(4px);
-	border-radius: 0.5rem;
-	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+form input {
+	background-color: transparent !important;
+	backdrop-filter: blur(4px) !important;
+	border-radius: 0.5rem !important;
+	box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+form.light input {
+	border: 2px solid rgba(255, 255, 255, 0.6);
+	color: #374151 !important;
+}
+
+form.dark input {
+	border: 2px solid rgba(255, 255, 255, 0.4);
+	color: aliceblue !important;
 }

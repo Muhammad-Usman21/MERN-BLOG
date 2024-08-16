@@ -20,6 +20,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate } from "react-router-dom";
 import { MdCancelPresentation } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 const CreatePost = () => {
 	const [file, setFile] = useState(null);
@@ -30,6 +31,7 @@ const CreatePost = () => {
 	const [loading, setLoading] = useState(false);
 	const [formData, setFormData] = useState({});
 	const navigate = useNavigate();
+	const { theme } = useSelector((state) => state.theme);
 
 	const handleUploadImage = async () => {
 		setImageUploadErrorMsg(null);
@@ -123,11 +125,13 @@ const CreatePost = () => {
 			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg-dark.jpg')]">
 			<div
 				className="flex flex-col gap-4 p-7 max-w-3xl mx-7 sm:p-10 sm:mx-12 md:mx-auto
-				bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg">
+				bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 				<h1 className="text-center text-3xl mb-7 font-semibold">
 					Create a post
 				</h1>
-				<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+				<form
+					className={`flex flex-col gap-4 ${theme}`}
+					onSubmit={handleSubmit}>
 					<div className="flex flex-col gap-4 sm:flex-row justify-between">
 						<TextInput
 							type="text"
@@ -160,7 +164,7 @@ const CreatePost = () => {
 					</div>
 					<div
 						className="flex flex-col sm:flex-row gap-4 items-center justify-between 
-					border-4 border-teal-500 border-dotted p-3">
+					bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-md p-3">
 						<FileInput
 							type="file"
 							accept="image/*"

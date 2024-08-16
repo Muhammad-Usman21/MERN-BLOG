@@ -187,7 +187,7 @@ const TicTacToe = () => {
 			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg-dark.jpg')]">
 			<div
 				className="flex p-8 flex-col items-center gap-3 md:gap-5 md:mb-20
-				bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg">
+				bg-transparent border-2 dark:border-white/20 border-white/40 backdrop-blur-[9px] rounded-lg shadow-2xl">
 				<div className=" flex gap-3 md:gap-5">
 					<Block
 						handleChange={handleChange}
@@ -250,8 +250,8 @@ const TicTacToe = () => {
 				</div>
 			</div>
 			<div
-				className="bg-transparent border-2 border-white/20 backdrop-blur-[9px] md:w-52
-            rounded-lg shadow-lg px-10 py-5 md:mb-20 gap-8 flex md:flex-col items-center justify-center">
+				className="bg-transparent border-2 dark:border-white/20 border-white/40 backdrop-blur-[9px] md:w-52
+            rounded-lg shadow-xl px-10 py-5 md:mb-20 gap-8 flex md:flex-col items-center justify-center">
 				<div className="flex flex-col items-center justify-center">
 					<span>{simple ? "SIMPLE MODE" : "COMPLEX MODE"}</span>
 					<Button
@@ -297,8 +297,10 @@ const Block = ({ handleChange, gameOver, btn, b }) => {
 			id={b}
 			value={b}
 			onClick={handleChange}
-			className={`w-20 h-20 md:w-32 md:h-32 text-5xl md:text-8xl rounded-lg bg-gray-100 dark:bg-gray-600
-                        disabled:bg-gray-300 dark:disabled:bg-gray-800 hover:opacity-80 disabled:cursor-not-allowed
+			// bg-gray-100 dark:bg-gray-600 disabled:bg-gray-300 dark:disabled:bg-gray-800
+			className={`bg-transparent border-2 dark:border-white/40 border-white/80 backdrop-blur-[9px] shadow-lg
+				w-20 h-20 md:w-32 md:h-32 text-5xl md:text-8xl rounded-lg hover:opacity-80 disabled:cursor-not-allowed
+				disabled:bg-gray-300 dark:disabled:bg-slate-900
                         ${
 													isRed
 														? "text-red-500"

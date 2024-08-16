@@ -380,11 +380,13 @@ const DashProfile = () => {
 			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg2-dark.jpg')]">
 			<div
 				className="max-w-xl my-10 mx-7 p-7 sm:mx-12 lg:mx-auto sm:p-10 self-center
-			bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-lg">
+			bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 				<h1 className="mt-2 mb-4 text-center font-semibold text-3xl">
 					Profile
 				</h1>
-				<form className="flex flex-col gap-3" onSubmit={handleUpdateUserSubmit}>
+				<form
+					className={`flex flex-col gap-3 ${theme}`}
+					onSubmit={handleUpdateUserSubmit}>
 					<input
 						type="file"
 						accept="image/*"
@@ -403,7 +405,7 @@ const DashProfile = () => {
 							<CircularProgressbar
 								value={imageFileUploadProgress || 0}
 								text={`${imageFileUploadProgress}%`}
-								strokeWidth={5}
+								strokeWidth={3}
 								styles={{
 									root: {
 										width: "100%",
@@ -413,9 +415,10 @@ const DashProfile = () => {
 										left: 0,
 									},
 									path: {
-										stroke: `rgba(62, 152, 199, ${
-											imageFileUploadProgress / 100
-										})`,
+										// stroke: `rgba(92, 230, 92, ${
+										// 	imageFileUploadProgress / 100
+										// })`,
+										stroke: "rgba(92, 230, 92)",
 									},
 								}}
 							/>
@@ -424,7 +427,7 @@ const DashProfile = () => {
 							src={imageFileUrl || currentUser.profilePicture}
 							alt="user"
 							className={`rounded-full w-full h-full object-cover 
-                        border-4 border-[lightgray] ${
+                        border-2 border-gray-400 ${
 													imageFileUploadProgress &&
 													imageFileUploadProgress < 100 &&
 													"opacity-60"
@@ -569,7 +572,7 @@ const DashProfile = () => {
 					<Modal.Header />
 					<Modal.Body>
 						<form
-							className="flex flex-col text-center"
+							className={`flex flex-col text-center ${theme}`}
 							onSubmit={handleDeleteUserSubmit}>
 							<div className="flex items-center mb-8 gap-8 self-center">
 								<HiOutlineExclamationCircle className="h-14 w-14 text-gray-500 dark:text-gray-200" />
