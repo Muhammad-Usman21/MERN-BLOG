@@ -55,7 +55,8 @@ const DashPosts = () => {
 		}
 	};
 
-	const handleDeletePostSubmit = async () => {
+	const handleDeletePostSubmit = async (e) => {
+		e.preventDefault();
 		setShowModal(false);
 		try {
 			const res = await fetch(

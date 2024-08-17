@@ -1,8 +1,18 @@
-import { Button, Modal, Spinner, Table } from "flowbite-react";
+import {
+	Alert,
+	Button,
+	Modal,
+	Spinner,
+	Table,
+	TextInput,
+} from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import { MdCancelPresentation } from "react-icons/md";
+import { deleteUserSuccess } from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
 
 const DashUsers = () => {
 	const { currentUser } = useSelector((state) => state.user);
@@ -12,6 +22,10 @@ const DashUsers = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [userIdToDelete, setUserIdToDelete] = useState(null);
 	const [getUsersLoading, setGetUsersLoading] = useState(false);
+	const [inputPasswordValue, setInputPasswordValue] = useState(null);
+	const [deleteUserErrorMsg, setDeleteUserErrorMsg] = useState(null);
+	const [deleteUserSuccessMsg, setDeleteUserSuccessMsg] = useState(null);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		setGetUsersLoading(true);
@@ -53,7 +67,48 @@ const DashUsers = () => {
 		}
 	};
 
-	const handleDeleteUserSubmit = async () => {};
+	const handleDeleteUserSubmit = async (e) => {
+		e.preventDefault();
+		setShowModal(false);
+		setDeleteUserErrorMsg(null);
+		setDeleteUserSuccessMsg(null);
+
+		if (!currentUser.googleAuth) {
+			if (!inputPasswordValue || inputPasswordValue === "") {
+				setInputPasswordValue(null);
+				setDeleteUserErrorMsg("Your password required!");
+				return;
+			}
+		}
+
+		try {
+			const res = await fetch(`api/user/deleteuser/${userIdToDelete}`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ inputPassword: inputPasswordValue }),
+			});
+
+			const data = await res.json();
+			if (res.ok) {
+				if (currentUser._id === userIdToDelete) {
+					dispatch(deleteUserSuccess(data));
+				} else {
+					setDeleteUserSuccessMsg("User deleted successfully!");
+					setUsers((prevUsers) =>
+						prevUsers.filter((user) => user._id !== userIdToDelete)
+					);
+				}
+			} else {
+				setInputPasswordValue(null);
+				setDeleteUserErrorMsg(data.message);
+			}
+		} catch (error) {
+			setInputPasswordValue(null);
+			setDeleteUserErrorMsg(error.message);
+		}
+	};
 
 	return (
 		<div
@@ -67,7 +122,7 @@ const DashUsers = () => {
 				<>
 					<div
 						className="overflow-x-scroll p-4 xl:overflow-visible md:max-w-md lg:max-w-5xl w-full mx-auto
-					scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
+					scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 flex flex-col gap-4
 					 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500
 					 bg-transparent border-2 border-white/40 dark:border-white/20 rounded-lg shadow-xl">
 						<Table
@@ -96,11 +151,21 @@ const DashUsers = () => {
 											/>
 										</Table.Cell>
 										<Table.Cell>
-											<span className="text-gray-900 dark:text-gray-300">
+											<span
+												className={`text-gray-900 dark:text-gray-300 ${
+													currentUser._id === user._id && "font-medium"
+												}`}>
 												{user.username}
 											</span>
 										</Table.Cell>
-										<Table.Cell>{user.email}</Table.Cell>
+										<Table.Cell>
+											<span
+												className={`${
+													currentUser._id === user._id && "font-medium"
+												}`}>
+												{user.email}
+											</span>
+										</Table.Cell>
 										<Table.Cell>
 											{user.isAdmin ? (
 												<FaCheck className="text-green-500" />
@@ -126,10 +191,29 @@ const DashUsers = () => {
 							<div className="flex w-full">
 								<button
 									onClick={handleShowMore}
-									className="text-teal-500 dark:text-gray-400 mx-auto text-sm py-4">
+									className="text-teal-500 dark:text-gray-400 mx-auto text-sm pb-4">
 									Show more
 								</button>
 							</div>
+						)}
+						{(deleteUserErrorMsg || deleteUserSuccessMsg) && (
+							<Alert
+								className="flex-auto"
+								color={deleteUserErrorMsg ? "failure" : "success"}
+								withBorderAccent>
+								<div className="flex justify-between">
+									<span>{deleteUserErrorMsg || deleteUserSuccessMsg}</span>
+									<span className="w-5 h-5">
+										<MdCancelPresentation
+											className="cursor-pointer w-6 h-6"
+											onClick={() => {
+												setDeleteUserErrorMsg(null);
+												setDeleteUserSuccessMsg(null);
+											}}
+										/>
+									</span>
+								</div>
+							</Alert>
 						)}
 					</div>
 				</>
@@ -160,6 +244,22 @@ const DashUsers = () => {
 								Delete User
 							</span>
 						</div>
+						{!currentUser.googleAuth && (
+							<div className="flex items-center p-2">
+								<TextInput
+									type="password"
+									id="password"
+									placeholder="Enter your password"
+									onChange={(e) => {
+										setInputPasswordValue(e.target.value);
+										setDeleteUserErrorMsg(null);
+										setDeleteUserSuccessMsg(null);
+									}}
+									value={inputPasswordValue || ""}
+									className="flex-grow"
+								/>
+							</div>
+						)}
 						<h3 className="my-5 text-lg text-gray-600 dark:text-gray-300">
 							Are you sure you want to delete this User?
 						</h3>
