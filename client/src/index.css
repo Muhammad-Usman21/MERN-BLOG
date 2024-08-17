@@ -55,6 +55,7 @@ nav[aria-label="Sidebar"].dark > div {
 	background-position: center !important;
 	border-radius: 0.5rem !important;
 	padding: 0 !important;
+	height: auto;
 }
 
 [data-testid="flowbite-dropdown"] > ul,
