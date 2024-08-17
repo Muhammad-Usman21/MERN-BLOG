@@ -210,7 +210,7 @@ const CreatePost = () => {
 						<img
 							src={formData.image}
 							alt="upload"
-							className="w-full h-72 object-cover border 
+							className="w-full h-auto object-cover border 
 						border-gray-500 dark:border-gray-300"
 						/>
 					)}

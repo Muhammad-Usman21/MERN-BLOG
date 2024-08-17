@@ -79,16 +79,16 @@ const DashPosts = () => {
 
 	return (
 		<div
-			className="flex p-10 w-full bg-cover bg-center justify-center
+			className="p-5 w-full bg-cover bg-center min-h-screen
 			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg2-dark.jpg')]">
 			{getPostsLoading ? (
-				<div className="self-center mb-96">
+				<div className="flex mt-20 justify-center">
 					<Spinner size="xl" />
 				</div>
 			) : currentUser.isAdmin && userPosts.length > 0 ? (
 				<>
 					<div
-						className="overflow-x-scroll p-3 xl:overflow-visible max-w-5xl w-full
+						className="overflow-x-scroll p-4 xl:overflow-visible md:max-w-md lg:max-w-5xl w-full mx-auto
 					scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
 					 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500
 					 bg-transparent border-2 border-white/40 dark:border-white/20 rounded-lg shadow-xl">
@@ -163,8 +163,8 @@ const DashPosts = () => {
 				</>
 			) : (
 				<div
-					className="self-center max-w-xl w-full bg-transparent border-2 
-				border-white/40 dark:border-white/20 rounded-lg shadow-lg backdrop-blur-[9px] mb-96">
+					className="max-w-xl w-full mx-auto bg-transparent border-2 mt-10
+				border-white/40 dark:border-white/20 rounded-lg shadow-lg backdrop-blur-[9px]">
 					<p className="p-10 text-center">You have no posts yet</p>
 				</div>
 			)}
