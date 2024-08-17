@@ -12,11 +12,14 @@ import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
 import TicTacToe from "./pages/TicTacToe";
+import PostPage from "./pages/PostPage";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
 	return (
 		<BrowserRouter>
 			<Header />
+			<ScrollToTop />
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/about" element={<About />} />
@@ -29,6 +32,7 @@ const App = () => {
 					<Route path="/create-post" element={<CreatePost />} />
 					<Route path="/update-post/:postId" element={<UpdatePost />} />
 				</Route>
+				<Route path="/post/:postSlug" element={<PostPage />} />
 				<Route path="/projects" element={<Projects />} />
 				<Route path="/tic-tac-toe" element={<TicTacToe />} />
 			</Routes>
