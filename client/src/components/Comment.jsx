@@ -125,7 +125,8 @@ const Comment = ({ comment, onLike, onEdit }) => {
 							)}
 
 							{currentUser &&
-								(currentUser._id === comment.userId || currentUser.isAdmin) && (
+								(currentUser._id === comment.userId ||
+									(currentUser.isAdmin && !user.isAdmin)) && (
 									<button
 										type="button"
 										onClick={handleEdit}

@@ -1,4 +1,5 @@
 import Comment from "../models/comment.model.js";
+import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 
 export const createComment = async (req, res, next) => {
@@ -70,6 +71,15 @@ export const editComment = async (req, res, next) => {
 			return next(
 				errorHandler(403, "You are not allowed to edit this comment")
 			);
+		}
+
+		const validUserAdmin = await User.findById(comment.userId);
+		if (
+			validUserAdmin?.isAdmin &&
+			req.user.isAdmin &&
+			req.params.userId !== req.user.id
+		) {
+			return next(errorHandler(400, "You can't edit any Admin's comment"));
 		}
 
 		const editedComment = await Comment.findByIdAndUpdate(

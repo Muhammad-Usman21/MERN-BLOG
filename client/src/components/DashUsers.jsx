@@ -82,7 +82,7 @@ const DashUsers = () => {
 		}
 
 		try {
-			const res = await fetch(`api/user/deleteuser/${userIdToDelete}`, {
+			const res = await fetch(`api/user/delete/${userIdToDelete}`, {
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json",

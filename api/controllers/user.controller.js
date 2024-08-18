@@ -136,13 +136,13 @@ export const updateUser = async (req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => {
-	if (req.user.id !== req.params.userId) {
+	if (req.user.id !== req.params.userId && !req.user.isAdmin) {
 		return next(errorHandler(403, "You are not allowed to delete this user"));
 	}
 
 	const { inputPassword } = req.body;
 
-	const validUser = await User.findById(req.params.userId);
+	const validUser = await User.findById(req.user.id);
 	if (!validUser) {
 		return next(errorHandler(404, "Oops! User not found."));
 	}
@@ -161,9 +161,20 @@ export const deleteUser = async (req, res, next) => {
 		}
 	}
 
+	const validUserAdmin = await User.findById(req.params.userId);
+	if (
+		validUserAdmin?.isAdmin &&
+		req.user.isAdmin &&
+		req.params.userId !== req.user.id
+	) {
+		return next(errorHandler(400, "You can't delete any Admin User!"));
+	}
+
 	try {
 		await User.findByIdAndDelete(req.params.userId);
-		res.clearCookie("access_token");
+		if (req.params.userId === req.user.id) {
+			res.clearCookie("access_token");
+		}
 		res.status(200).json("User has been deleted");
 	} catch (error) {
 		next(error);
@@ -212,49 +223,6 @@ export const getUsers = async (req, res, next) => {
 	}
 };
 
-export const deleteUsers = async (req, res, next) => {
-	if (!req.user.isAdmin) {
-		return next(errorHandler(403, "You are not allowed to delete this user"));
-	}
-
-	const { inputPassword } = req.body;
-
-	const validUser = await User.findById(req.user.id);
-	if (!validUser) {
-		return next(errorHandler(404, "Oops! User not found."));
-	}
-
-	if (!validUser.googleAuth) {
-		if (!inputPassword || inputPassword === "") {
-			return next(errorHandler(400, "Password required!"));
-		} else {
-			const validPassword = bcryptjs.compareSync(
-				inputPassword,
-				validUser.password
-			);
-			if (!validPassword) {
-				return next(errorHandler(400, "Invalid password. Try again!"));
-			}
-		}
-	}
-
-	const validUserAdmin = await User.findById(req.params.userId);
-	if (
-		validUserAdmin?.isAdmin &&
-		req.user.isAdmin &&
-		req.params.userId !== req.user.id
-	) {
-		return next(errorHandler(400, "You can't delete any Admin User!"));
-	}
-
-	try {
-		await User.findByIdAndDelete(req.params.userId);
-		res.status(200).json("User has been deleted");
-	} catch (error) {
-		next(error);
-	}
-};
-
 export const getUser = async (req, res, next) => {
 	try {
 		const user = await User.findById(req.params.userId);
@@ -262,8 +230,8 @@ export const getUser = async (req, res, next) => {
 			return next(errorHandler("User not found!"));
 		}
 
-		const { username, profilePicture, ...restInfo } = user._doc;
-		res.status(200).json({ username, profilePicture });
+		const { username, profilePicture, isAdmin, ...restInfo } = user._doc;
+		res.status(200).json({ username, profilePicture, isAdmin });
 	} catch (error) {
 		next(error);
 	}
