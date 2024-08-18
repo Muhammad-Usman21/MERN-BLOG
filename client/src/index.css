@@ -187,6 +187,14 @@ form.dark input {
 .post-content a:hover {
 	text-decoration: underline;
 }
+.post-content code {
+	background-color: aliceblue;
+	border-radius: 0.5rem;
+	padding: 0 0.3rem;
+}
+.dark .post-content code {
+	color: #000;
+}
 .post-content pre {
 	padding: 1rem;
 	margin: 0.7rem 0;
@@ -200,11 +208,8 @@ form.dark input {
 	background-color: rgb(202, 221, 238);
 	color: #000;
 }
-.post-content code {
-	background-color: aliceblue;
-	border-radius: 0.5rem;
-	padding: 0 0.3rem;
-}
-.dark .post-content code {
-	color: #000;
+@media (max-width: 1024px) {
+	.post-content pre {
+		display: none;
+	}
 }

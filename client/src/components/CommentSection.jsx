@@ -1,13 +1,15 @@
 import { Alert, Button, Textarea } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdCancelPresentation } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Comment from "./Comment";
 
 const CommentSection = ({ postId }) => {
 	const { currentUser } = useSelector((state) => state.user);
 	const [comment, setComment] = useState("");
 	const [commentErrorMsg, setCommentErrorMsg] = useState(null);
+	const [comments, setComments] = useState([]);
 
 	const handleCommentSubmit = async (e) => {
 		e.preventDefault();
@@ -32,6 +34,7 @@ const CommentSection = ({ postId }) => {
 			const data = await res.json();
 			if (res.ok) {
 				setComment("");
+				setComments([data, ...comments]);
 			} else {
 				setCommentErrorMsg(data.message);
 			}
@@ -39,6 +42,24 @@ const CommentSection = ({ postId }) => {
 			setCommentErrorMsg(error.message);
 		}
 	};
+
+	useEffect(() => {
+		const getComments = async () => {
+			try {
+				const res = await fetch(`/api/comment/getcomments/${postId}`);
+				const data = await res.json();
+				if (res.ok) {
+					setComments(data);
+				} else {
+					console.log(data.message);
+				}
+			} catch (error) {
+				console.log(error.message);
+			}
+		};
+
+		getComments();
+	}, [postId]);
 
 	return (
 		<div className="max-w-2xl mx-auto w-full p-3">
@@ -80,7 +101,10 @@ const CommentSection = ({ postId }) => {
 							</Button>
 						</div>
 						{commentErrorMsg && (
-							<Alert className="flex-auto mt-2" color="failure" withBorderAccent>
+							<Alert
+								className="flex-auto mt-2"
+								color="failure"
+								withBorderAccent>
 								<div className="flex justify-between">
 									<span>{commentErrorMsg}</span>
 									<span className="w-5 h-5">
@@ -97,12 +121,28 @@ const CommentSection = ({ postId }) => {
 					</form>
 				</>
 			) : (
-				<div className="text-sm text-teal-500 my-3 flex gap-2 dark:text-gray-500 pl-3">
+				<div className="text-sm text-teal-500 my-3 flex gap-2 dark:text-gray-500 ml-3">
 					<p>You mush signed in to comment.</p>
 					<Link className="text-blue-500 hover:underline" to={"/sign-in"}>
 						Sign In
 					</Link>
 				</div>
+			)}
+
+			{comments.length === 0 ? (
+				<p className="text-sm mt-7 mb-5 ml-3">No comments yet</p>
+			) : (
+				<>
+					<div className="text-sm mt-7 mb-5 flex items-center gap-1 ml-3">
+						<p>Comments</p>
+						<div className="border border-gray-400 py-1 px-2 rounded-sm">
+							<p>{comments.length}</p>
+						</div>
+					</div>
+					{comments.map((comment) => (
+						<Comment key={comment._id} comment={comment} />
+					))}
+				</>
 			)}
 		</div>
 	);

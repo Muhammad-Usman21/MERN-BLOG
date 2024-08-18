@@ -254,3 +254,17 @@ export const deleteUsers = async (req, res, next) => {
 		next(error);
 	}
 };
+
+export const getUser = async (req, res, next) => {
+	try {
+		const user = await User.findById(req.params.userId);
+		if (!user) {
+			return next(errorHandler("User not found!"));
+		}
+
+		const { username, profilePicture, ...restInfo } = user._doc;
+		res.status(200).json({ username, profilePicture });
+	} catch (error) {
+		next(error);
+	}
+};
