@@ -2,7 +2,7 @@ import { Alert, Button, Textarea } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { MdCancelPresentation } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Comment from "./Comment";
 
 const CommentSection = ({ postId }) => {
@@ -10,6 +10,7 @@ const CommentSection = ({ postId }) => {
 	const [comment, setComment] = useState("");
 	const [commentErrorMsg, setCommentErrorMsg] = useState(null);
 	const [comments, setComments] = useState([]);
+	const navigate = useNavigate();
 
 	const handleCommentSubmit = async (e) => {
 		e.preventDefault();
@@ -46,7 +47,7 @@ const CommentSection = ({ postId }) => {
 	useEffect(() => {
 		const getComments = async () => {
 			try {
-				const res = await fetch(`/api/comment/getcomments/${postId}`);
+				const res = await fetch(`/api/comment/get-comments/${postId}`);
 				const data = await res.json();
 				if (res.ok) {
 					setComments(data);
@@ -60,6 +61,36 @@ const CommentSection = ({ postId }) => {
 
 		getComments();
 	}, [postId]);
+
+	const handleLike = async (commentId) => {
+		try {
+			if (!currentUser) {
+				navigate("/sign-in");
+				return;
+			}
+			const res = await fetch(`/api/comment/like-comment/${commentId}`, {
+				method: "PUT",
+			});
+			const data = await res.json();
+			if (res.ok) {
+				setComments(
+					comments.map((comment) =>
+						comment._id === commentId
+							? {
+									...comment,
+									likes: data.likes,
+									numberOfLikes: data.likes.length,
+							  }
+							: comment
+					)
+				);
+			} else {
+				console.log(data.message);
+			}
+		} catch (error) {
+			console.log(error.message);
+		}
+	};
 
 	return (
 		<div className="max-w-2xl mx-auto w-full p-3">
@@ -140,7 +171,7 @@ const CommentSection = ({ postId }) => {
 						</div>
 					</div>
 					{comments.map((comment) => (
-						<Comment key={comment._id} comment={comment} />
+						<Comment key={comment._id} comment={comment} onLike={handleLike} />
 					))}
 				</>
 			)}
