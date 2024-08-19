@@ -91,12 +91,12 @@ const DashPosts = () => {
 					<div
 						className="overflow-x-scroll p-4 xl:overflow-visible md:max-w-md lg:max-w-5xl w-full mx-auto
 					scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
-					 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500
+					 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500 dark:shadow-whiteLg
 					 bg-transparent border-2 border-white/40 dark:border-white/20 rounded-lg shadow-xl">
 						<Table
 							hoverable
 							className="backdrop-blur-[9px] bg-transparent border-2 border-white/20 
-							rounded-lg shadow-lg">
+							rounded-lg shadow-lg dark:shadow-whiteLg">
 							<Table.Head className=" xl:sticky xl:top-[68px]">
 								<Table.HeadCell>Date updated</Table.HeadCell>
 								<Table.HeadCell>Post Image</Table.HeadCell>
@@ -164,7 +164,7 @@ const DashPosts = () => {
 				</>
 			) : (
 				<div
-					className="max-w-xl w-full mx-auto bg-transparent border-2 mt-10
+					className="max-w-xl w-full mx-auto bg-transparent border-2 mt-10 dark:shadow-whiteLg
 				border-white/40 dark:border-white/20 rounded-lg shadow-lg backdrop-blur-[9px]">
 					<p className="p-10 text-center">You have no posts yet</p>
 				</div>

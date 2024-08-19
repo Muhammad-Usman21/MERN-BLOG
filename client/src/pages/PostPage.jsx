@@ -70,10 +70,10 @@ const PostPage = () => {
 				post && (
 					<>
 						<main
-							className="flex p-2 max-w-6xl mx-10 sm:mx-14 md:mx-20 lg:mx-auto flex-col gap-4
+							className="flex p-2 max-w-6xl mx-10 sm:mx-14 md:mx-20 lg:mx-auto flex-col gap-4 dark:shadow-whiteLg
 				    			bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 							<h1
-								className="text-3xl mt-10 p-4 text-center font-serif max-w-2xl mx-auto lg:text-4xl
+								className="text-3xl mt-10 p-4 text-center font-serif max-w-2xl mx-auto lg:text-4xl dark:shadow-whiteLg
                          			bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 								{post.title}
 							</h1>
@@ -129,7 +129,7 @@ const PostPage = () => {
 							<CommentSection postId={post._id} />
 						</main>
 						<div
-							className="flex flex-col justify-center items-center my-10 mx-10 sm:mx-14 p-5
+							className="flex flex-col justify-center items-center my-10 mx-10 sm:mx-14 p-5 dark:shadow-whiteLg
 							bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 							<h1 className="text-2xl my-5">Recent Articles</h1>
 							<div className="flex flex-wrap gap-5 my-5 justify-center">

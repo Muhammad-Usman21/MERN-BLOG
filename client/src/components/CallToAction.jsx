@@ -4,7 +4,7 @@ const CallToAction = () => {
 	return (
 		<div
 			className="flex flex-col md:flex-row p-3 justify-center items-center my-5
-                rounded-tl-3xl rounded-bl-none rounded-br-3xl rounded-tr-none text-center
+                rounded-tl-3xl rounded-bl-none rounded-br-3xl rounded-tr-none text-center dark:shadow-whiteLg
                 bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 			<div className="flex flex-col justify-center flex-1 p-3 sm:p-5 md:p-7">
 				<h2 className="text-2xl">Want to learn more about MERN?</h2>

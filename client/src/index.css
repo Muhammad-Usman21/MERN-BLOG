@@ -67,6 +67,12 @@ nav[aria-label="Sidebar"].dark > div {
 	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) !important;
 }
 
+.dark [data-testid="flowbite-dropdown"] > ul,
+.dark [data-testid="modal-overlay"] > div > div {
+	box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1),
+		0 4px 6px rgba(255, 255, 255, 0.05) !important;
+}
+
 @media (min-width: 768px) {
 	nav[aria-label="Sidebar"] > div {
 		border-bottom: none !important;
@@ -91,6 +97,11 @@ nav[aria-label="Sidebar"].dark > div {
 		position: sticky;
 		top: 90px;
 	}
+
+	.dark [data-testid="flowbite-sidebar-items"] {
+		box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1),
+			0 4px 6px rgba(255, 255, 255, 0.05) !important;
+	}
 }
 
 @media (max-width: 768px) {
@@ -101,6 +112,11 @@ nav[aria-label="Sidebar"].dark > div {
 		border-radius: 0.5rem !important;
 		box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) !important;
 		align-items: center !important;
+	}
+
+	.dark [data-testid="flowbite-navbar-collapse"] > ul {
+		box-shadow: 0 10px 15px rgba(255, 255, 255, 0.1),
+			0 4px 6px rgba(255, 255, 255, 0.05) !important;
 	}
 
 	[data-testid="flowbite-navbar-collapse"] > ul > a {
@@ -136,6 +152,11 @@ form input {
 	box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) !important;
 }
 
+.dark form input {
+	box-shadow: 0 5px 7px rgba(255, 255, 255, 0.1),
+		0 4px 6px rgba(255, 255, 255, 0.05) !important;
+}
+
 form.light input {
 	border: 2px solid rgba(255, 255, 255, 0.6);
 	color: #374151 !important;
@@ -151,6 +172,11 @@ form textarea {
 	backdrop-filter: blur(4px) !important;
 	border-radius: 0.5rem !important;
 	box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+.dark form textarea {
+	box-shadow: 0 5px 7px rgba(255, 255, 255, 0.1),
+		0 4px 6px rgba(255, 255, 255, 0.05) !important;
 }
 
 form.light textarea {

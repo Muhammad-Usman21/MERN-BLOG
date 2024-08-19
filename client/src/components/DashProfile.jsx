@@ -379,7 +379,7 @@ const DashProfile = () => {
 			className="w-full bg-cover bg-center
 			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg2-dark.jpg')]">
 			<div
-				className="max-w-xl my-10 mx-7 p-7 sm:mx-12 lg:mx-auto sm:p-10 self-center
+				className="max-w-xl my-10 mx-7 p-7 sm:mx-12 lg:mx-auto sm:p-10 self-center dark:shadow-whiteLg
 			bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 				<h1 className="mt-2 mb-4 text-center font-semibold text-3xl">
 					Profile
@@ -426,12 +426,11 @@ const DashProfile = () => {
 						<img
 							src={imageFileUrl || currentUser.profilePicture}
 							alt="user"
-							className={`rounded-full w-full h-full object-cover 
-                        border-2 border-gray-400 ${
-													imageFileUploadProgress &&
-													imageFileUploadProgress < 100 &&
-													"opacity-60"
-												}`}
+							className={`${
+								imageFileUploadProgress &&
+								imageFileUploadProgress < 100 &&
+								"opacity-60"
+							} rounded-full w-full h-full object-cover border-2 border-gray-400 `}
 						/>
 					</button>
 
@@ -459,6 +458,7 @@ const DashProfile = () => {
 							onChange={handleChange}
 							value={formData.currentPassword || ""}
 							disabled={forgetPassword}
+							required
 						/>
 					)}
 					<div className="flex items-center gap-1">
@@ -538,7 +538,6 @@ const DashProfile = () => {
 												<span
 													onClick={handleForgetPassword}
 													className="cursor-pointer">
-													{" "}
 													Forget Password?
 												</span>
 											)}

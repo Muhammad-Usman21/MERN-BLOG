@@ -64,13 +64,13 @@ const SignIn = () => {
 			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg-dark.jpg')]">
 			<div
 				className="flex p-10 max-w-3xl mx-10 sm:mx-14 md:mx-20 lg:mx-auto flex-col md:flex-row md:items-center gap-10
-				bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
+				bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl dark:shadow-whiteLg">
 				<div className="flex-1">
 					<Link
 						to="/"
 						className="font-semibold dark:text-white text-3xl flex items-center
-						bg-transparent border-2 border-white/60 dark:border-0 dark:p-[14px] 
-						backdrop-blur-[9px] rounded-full shadow-xl p-3">
+						bg-transparent border-2 border-white/60 dark:border-white/20 dark:p-[14px] 
+						backdrop-blur-[9px] rounded-full shadow-xl p-3 dark:shadow-whiteLg">
 						<HoverBorder>{"Usman's"}</HoverBorder>
 						<span className="ml-2 text-4xl">Blog</span>
 					</Link>
@@ -90,6 +90,7 @@ const SignIn = () => {
 								placeholder="Username or Email"
 								id="userInfo"
 								onChange={handleChange}
+								required
 							/>
 						</div>
 						<div>
@@ -99,6 +100,7 @@ const SignIn = () => {
 								placeholder="Password"
 								id="password"
 								onChange={handleChange}
+								required
 							/>
 						</div>
 						<Button

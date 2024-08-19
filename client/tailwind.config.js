@@ -4,7 +4,12 @@ const flowbite = require("flowbite-react/tailwind");
 export default {
 	content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}", flowbite.content()],
 	theme: {
-		extend: {},
+		extend: {
+			boxShadow: {
+				whiteLg:
+					"0 10px 15px rgba(255, 255, 255, 0.1), 0 4px 6px rgba(255, 255, 255, 0.05)",
+			},
+		},
 	},
 	plugins: [flowbite.plugin(), require("tailwind-scrollbar")],
 };

@@ -124,7 +124,7 @@ const CreatePost = () => {
 			className="min-h-screen bg-cover bg-center py-14 
 			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg-dark.jpg')]">
 			<div
-				className="flex flex-col gap-4 p-7 max-w-3xl mx-7 sm:p-10 sm:mx-12 md:mx-auto
+				className="flex flex-col gap-4 p-7 max-w-3xl mx-7 sm:p-10 sm:mx-12 md:mx-auto dark:shadow-whiteLg
 				bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 				<h1 className="text-center text-3xl mb-7 font-semibold">
 					Create a post
@@ -163,7 +163,7 @@ const CreatePost = () => {
 						</Select> */}
 					</div>
 					<div
-						className="flex flex-col sm:flex-row gap-4 items-center justify-between 
+						className="flex flex-col sm:flex-row gap-4 items-center justify-between dark:shadow-whiteLg
 					bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-md p-3">
 						<FileInput
 							type="file"

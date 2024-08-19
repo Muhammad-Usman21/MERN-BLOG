@@ -23,14 +23,14 @@ const FooterComp = () => {
 						<Link
 							to="/"
 							className="font-semibold dark:text-white text-xl flex items-center
-							bg-transparent border-2 border-white/60 dark:border-0 dark:p-[14px] 
-							backdrop-blur-[9px] rounded-full shadow-xl p-3 pr-4">
+							bg-transparent border-2 border-white/60 dark:border-white/20 dark:p-[14px] 
+							backdrop-blur-[9px] rounded-full shadow-xl p-3 pr-4 dark:shadow-whiteLg">
 							<HoverBorder>{"Usman's"}</HoverBorder>
 							<span className="ml-2 text-3xl">Blog</span>
 						</Link>
 					</div>
 					<div
-						className="grid grid-cols-2 gap-8 lg:grid-cols-4 sm:gap-10 mt-4 sm:mt-0 text-center
+						className="grid grid-cols-2 gap-8 lg:grid-cols-4 sm:gap-10 mt-4 sm:mt-0 text-center dark:shadow-whiteLg
 						bg-transparent border-2 border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl px-7 py-4">
 						<div>
 							<Footer.Title title="My Projects" />
