@@ -77,7 +77,7 @@ export const editComment = async (req, res, next) => {
 		if (
 			validUserAdmin?.isAdmin &&
 			req.user.isAdmin &&
-			req.params.userId !== req.user.id
+			comment.userId !== req.user.id
 		) {
 			return next(errorHandler(400, "You can't edit any Admin's comment"));
 		}
@@ -112,13 +112,46 @@ export const deleteComment = async (req, res, next) => {
 		if (
 			validUserAdmin?.isAdmin &&
 			req.user.isAdmin &&
-			req.params.userId !== req.user.id
+			comment.userId !== req.user.id
 		) {
 			return next(errorHandler(400, "You can't delete any Admin's comment"));
 		}
 
 		await Comment.findByIdAndDelete(req.params.commentId);
 		res.status(200).json("Comment has been deleted");
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const getComments = async (req, res, next) => {
+	try {
+		if (!req.user.isAdmin) {
+			return next(errorHandler(403, "You are not allowed to get all comments"));
+		}
+
+		const startIndex = parseInt(req.query.startIndex) || 0;
+		const limit = parseInt(req.query.limit) || 10;
+		const sortDirection = req.query.sort === "asc" ? 1 : -1;
+
+		const comments = await Comment.find()
+			.sort({ updatedAt: sortDirection })
+			.skip(startIndex)
+			.limit(limit);
+
+		const totalComments = await Comment.countDocuments();
+
+		const now = new Date();
+		const oneMonthAgo = new Date(
+			now.getFullYear(),
+			now.getMonth() - 1,
+			now.getDay()
+		);
+		const lastMonthComments = await Comment.countDocuments({
+			updatedAt: { $gte: oneMonthAgo },
+		});
+
+		res.status(200).json({ comments, totalComments, lastMonthComments });
 	} catch (error) {
 		next(error);
 	}

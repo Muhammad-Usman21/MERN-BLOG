@@ -240,7 +240,7 @@ const CommentSection = ({ postId }) => {
 								<div className="flex items-center mb-8 gap-8 self-center">
 									<HiOutlineExclamationCircle className="h-14 w-14 text-gray-500 dark:text-gray-200" />
 									<span className="text-2xl text-gray-600 dark:text-gray-200">
-										Delete Account
+										Delete Comment
 									</span>
 								</div>
 								<h3 className="my-5 text-lg text-gray-600 dark:text-gray-300">

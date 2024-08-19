@@ -1,63 +1,59 @@
-import {
-	Alert,
-	Button,
-	Modal,
-	Spinner,
-	Table,
-	TextInput,
-} from "flowbite-react";
+import { Alert, Button, Modal, Spinner, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
-import { FaCheck, FaTimes } from "react-icons/fa";
 import { MdCancelPresentation } from "react-icons/md";
 import { deleteUserSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
-const DashUsers = () => {
+const DashComments = () => {
 	const { currentUser } = useSelector((state) => state.user);
 	const { theme } = useSelector((state) => state.theme);
-	const [users, setUsers] = useState([]);
+	const [comments, setComments] = useState([]);
 	const [showMore, setShowMore] = useState(true);
 	const [showModal, setShowModal] = useState(false);
-	const [userIdToDelete, setUserIdToDelete] = useState(null);
-	const [getUsersLoading, setGetUsersLoading] = useState(false);
-	const [inputPasswordValue, setInputPasswordValue] = useState(null);
-	const [deleteUserErrorMsg, setDeleteUserErrorMsg] = useState(null);
-	const [deleteUserSuccessMsg, setDeleteUserSuccessMsg] = useState(null);
+	const [commentIdToDelete, setCommentIdToDelete] = useState(null);
+	const [getCommentsLoading, setGetCommentsLoading] = useState(false);
+	const [deleteCommentErrorMsg, setDeleteCommentErrorMsg] = useState(null);
+	const [deleteCommentSuccessMsg, setDeleteCommentSuccessMsg] = useState(null);
 	const dispatch = useDispatch();
+	const [postDetails, setPostDetails] = useState({});
+	const [userDetails, setUserDetails] = useState({});
 
 	useEffect(() => {
-		setGetUsersLoading(true);
-		const fetchUsers = async () => {
+		setGetCommentsLoading(true);
+		const fetchComments = async () => {
 			try {
-				const res = await fetch(`/api/user/getusers`);
+				const res = await fetch(`/api/comment/get-comments`);
 				const data = await res.json();
 				if (res.ok) {
-					setUsers(data.users);
-					if (data.users.length < 10) {
+					setComments(data.comments);
+					if (data.comments.length < 10) {
 						setShowMore(false);
 					}
-					setGetUsersLoading(false);
+					setGetCommentsLoading(false);
 				}
 			} catch (error) {
 				console.log(error.message);
-				setGetUsersLoading(false);
+				setGetCommentsLoading(false);
 			}
 		};
 
 		if (currentUser.isAdmin) {
-			fetchUsers();
+			fetchComments();
 		}
 	}, [currentUser._id]);
 
 	const handleShowMore = async () => {
-		const startIndex = users.length;
+		const startIndex = comments.length;
 		try {
-			const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`);
+			const res = await fetch(
+				`/api/comment/get-comments?startIndex=${startIndex}`
+			);
 			const data = await res.json();
 			if (res.ok) {
-				setUsers((prevUsers) => [...prevUsers, ...data.users]);
+				setComments((prevUsers) => [...prevUsers, ...data.users]);
 				if (data.posts.length < 10) {
 					setShowMore(false);
 				}
@@ -67,58 +63,92 @@ const DashUsers = () => {
 		}
 	};
 
-	const handleDeleteUserSubmit = async (e) => {
+	const handleDeleteCommentSubmit = async (e) => {
 		e.preventDefault();
 		setShowModal(false);
-		setDeleteUserErrorMsg(null);
-		setDeleteUserSuccessMsg(null);
-
-		if (!currentUser.googleAuth) {
-			if (!inputPasswordValue || inputPasswordValue === "") {
-				setInputPasswordValue(null);
-				setDeleteUserErrorMsg("Your password required!");
-				return;
-			}
-		}
+		setDeleteCommentErrorMsg(null);
+		setDeleteCommentSuccessMsg(null);
 
 		try {
-			const res = await fetch(`api/user/delete/${userIdToDelete}`, {
-				method: "DELETE",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ inputPassword: inputPasswordValue }),
-			});
+			const res = await fetch(
+				`api/comment/delete-comment/${commentIdToDelete}`,
+				{
+					method: "DELETE",
+				}
+			);
 
 			const data = await res.json();
 			if (res.ok) {
-				if (currentUser._id === userIdToDelete) {
+				if (currentUser._id === commentIdToDelete) {
 					dispatch(deleteUserSuccess(data));
 				} else {
-					setDeleteUserSuccessMsg("User deleted successfully!");
-					setUsers((prevUsers) =>
-						prevUsers.filter((user) => user._id !== userIdToDelete)
+					setDeleteCommentSuccessMsg("Comment deleted successfully!");
+					setComments((prevComments) =>
+						prevComments.filter((comment) => comment._id !== commentIdToDelete)
 					);
 				}
 			} else {
-				setInputPasswordValue(null);
-				setDeleteUserErrorMsg(data.message);
+				setDeleteCommentErrorMsg(data.message);
 			}
 		} catch (error) {
-			setInputPasswordValue(null);
-			setDeleteUserErrorMsg(error.message);
+			setDeleteCommentErrorMsg(error.message);
 		}
 	};
+
+	const getCommentPost = async (postId) => {
+		if (!postDetails[postId]) {
+			try {
+				const res = await fetch(`/api/post/getposts?postId=${postId}`);
+				const data = await res.json();
+				if (res.ok) {
+					setPostDetails((prevState) => ({
+						...prevState,
+						[postId]: data.posts[0],
+					}));
+				} else {
+					console.log(data.message);
+				}
+			} catch (error) {
+				console.log(error.message);
+			}
+		}
+	};
+
+	const getCommentUser = async (userId) => {
+		if (!userDetails[userId]) {
+			try {
+				const res = await fetch(`/api/user/${userId}`);
+				const data = await res.json();
+				if (res.ok) {
+					setUserDetails((prevState) => ({
+						...prevState,
+						[userId]: data,
+					}));
+				} else {
+					console.log(data.message);
+				}
+			} catch (error) {
+				console.log(error.message);
+			}
+		}
+	};
+
+	useEffect(() => {
+		comments.forEach((comment) => {
+			getCommentPost(comment.postId);
+			getCommentUser(comment.userId);
+		});
+	}, [comments]);
 
 	return (
 		<div
 			className="p-5 w-full bg-cover bg-center min-h-screen
 			bg-[url('../../bg-light.jpg')] dark:bg-[url('../../bg2-dark.jpg')]">
-			{getUsersLoading ? (
+			{getCommentsLoading ? (
 				<div className="flex mt-20 justify-center">
 					<Spinner size="xl" />
 				</div>
-			) : currentUser.isAdmin && users.length > 0 ? (
+			) : currentUser.isAdmin && comments?.length > 0 ? (
 				<>
 					<div
 						className="overflow-x-scroll p-4 xl:overflow-visible md:max-w-md lg:max-w-5xl w-full mx-auto
@@ -130,58 +160,50 @@ const DashUsers = () => {
 							className="backdrop-blur-[9px] bg-transparent border-2 border-white/20 
 							rounded-lg shadow-lg">
 							<Table.Head className=" xl:sticky xl:top-[68px]">
-								<Table.HeadCell>Date created</Table.HeadCell>
-								<Table.HeadCell>User Image</Table.HeadCell>
+								<Table.HeadCell>Date Updated</Table.HeadCell>
+								<Table.HeadCell>Comment Content</Table.HeadCell>
+								<Table.HeadCell>Number of Likes</Table.HeadCell>
+								<Table.HeadCell>Post Title</Table.HeadCell>
 								<Table.HeadCell>Username</Table.HeadCell>
-								<Table.HeadCell>Email</Table.HeadCell>
-								<Table.HeadCell>Admin</Table.HeadCell>
 								<Table.HeadCell>Delete</Table.HeadCell>
 							</Table.Head>
 							<Table.Body>
-								{users.map((user) => (
-									<Table.Row key={user._id} className="border border-gray-400">
+								{comments.map((comment) => (
+									<Table.Row
+										key={comment._id}
+										className="border border-gray-400">
 										<Table.Cell>
-											{new Date(user.createdAt).toLocaleDateString()}
-										</Table.Cell>
-										<Table.Cell>
-											<img
-												src={user.profilePicture}
-												alt={user.username}
-												className="w-10 h-10 object-cover bg-gray-500 rounded-full"
-											/>
+											{new Date(comment.updatedAt).toLocaleDateString()}
 										</Table.Cell>
 										<Table.Cell>
 											<span
 												className={`text-gray-900 dark:text-gray-300 ${
-													currentUser._id === user._id && "font-medium"
+													currentUser._id === comment.userId && "font-medium"
 												}`}>
-												{user.username}
+												{comment.content}
 											</span>
 										</Table.Cell>
+										<Table.Cell>{comment.numberOfLikes}</Table.Cell>
 										<Table.Cell>
-											<span
-												className={`${
-													currentUser._id === user._id && "font-medium"
-												}`}>
-												{user.email}
-											</span>
+											<Link to={`/post/${postDetails[comment.postId]?.slug}`}>
+												{postDetails[comment.postId]?.title}
+											</Link>
 										</Table.Cell>
 										<Table.Cell>
-											{user.isAdmin ? (
-												<FaCheck className="text-green-500" />
-											) : (
-												<FaTimes className="text-red-500" />
-											)}
+											{userDetails[comment.userId]?.username}
 										</Table.Cell>
 										<Table.Cell>
 											<button
 												onClick={() => {
 													setShowModal(true);
-													setUserIdToDelete(user._id);
+													setCommentIdToDelete(comment._id);
 												}}
 												className="font-medium text-red-500 hover:cursor-pointer
                                                 disabled:text-red-300 disabled:cursor-auto"
-												disabled={user.isAdmin && currentUser._id !== user._id}>
+												disabled={
+													userDetails[comment.userId]?.isAdmin &&
+													currentUser._id !== comment.userId
+												}>
 												Delete
 											</button>
 										</Table.Cell>
@@ -198,19 +220,21 @@ const DashUsers = () => {
 								</button>
 							</div>
 						)}
-						{(deleteUserErrorMsg || deleteUserSuccessMsg) && (
+						{(deleteCommentErrorMsg || deleteCommentSuccessMsg) && (
 							<Alert
 								className="flex-auto"
-								color={deleteUserErrorMsg ? "failure" : "success"}
+								color={deleteCommentErrorMsg ? "failure" : "success"}
 								withBorderAccent>
 								<div className="flex justify-between">
-									<span>{deleteUserErrorMsg || deleteUserSuccessMsg}</span>
+									<span>
+										{deleteCommentErrorMsg || deleteCommentSuccessMsg}
+									</span>
 									<span className="w-5 h-5">
 										<MdCancelPresentation
 											className="cursor-pointer w-6 h-6"
 											onClick={() => {
-												setDeleteUserErrorMsg(null);
-												setDeleteUserSuccessMsg(null);
+												setDeleteCommentErrorMsg(null);
+												setDeleteCommentSuccessMsg(null);
 											}}
 										/>
 									</span>
@@ -223,7 +247,7 @@ const DashUsers = () => {
 				<div
 					className="max-w-xl w-full mx-auto bg-transparent border-2 mt-10
 				border-white/40 dark:border-white/20 rounded-lg shadow-lg backdrop-blur-[9px]">
-					<p className="p-10 text-center">There are no users yet</p>
+					<p className="p-10 text-center">There are no comments yet</p>
 				</div>
 			)}
 
@@ -239,31 +263,15 @@ const DashUsers = () => {
 				<Modal.Body>
 					<form
 						className={`flex flex-col text-center ${theme}`}
-						onSubmit={handleDeleteUserSubmit}>
+						onSubmit={handleDeleteCommentSubmit}>
 						<div className="flex items-center mb-8 gap-8 self-center">
 							<HiOutlineExclamationCircle className="h-14 w-14 text-gray-500 dark:text-gray-200" />
 							<span className="text-2xl text-gray-600 dark:text-gray-200">
-								Delete User
+								Delete Comment
 							</span>
 						</div>
-						{!currentUser.googleAuth && (
-							<div className="flex items-center p-2">
-								<TextInput
-									type="password"
-									id="password"
-									placeholder="Enter your password"
-									onChange={(e) => {
-										setInputPasswordValue(e.target.value);
-										setDeleteUserErrorMsg(null);
-										setDeleteUserSuccessMsg(null);
-									}}
-									value={inputPasswordValue || ""}
-									className="flex-grow"
-								/>
-							</div>
-						)}
 						<h3 className="my-5 text-lg text-gray-600 dark:text-gray-300">
-							Are you sure you want to delete this User?
+							Are you sure you want to delete this Comment?
 						</h3>
 						<div className="flex justify-around">
 							<Button type="submit" color="failure" className="focus:ring-1">
@@ -284,4 +292,4 @@ const DashUsers = () => {
 	);
 };
 
-export default DashUsers;
+export default DashComments;
