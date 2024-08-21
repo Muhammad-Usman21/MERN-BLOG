@@ -14,6 +14,7 @@ import UpdatePost from "./pages/UpdatePost";
 import TicTacToe from "./pages/TicTacToe";
 import PostPage from "./pages/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
+import Search from "./pages/Search";
 
 const App = () => {
 	return (
@@ -33,6 +34,7 @@ const App = () => {
 					<Route path="/update-post/:postId" element={<UpdatePost />} />
 				</Route>
 				<Route path="/post/:postSlug" element={<PostPage />} />
+				<Route path="/search" element={<Search />} />
 				<Route path="/projects" element={<Projects />} />
 				<Route path="/tic-tac-toe" element={<TicTacToe />} />
 			</Routes>

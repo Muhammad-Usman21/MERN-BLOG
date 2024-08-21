@@ -6,19 +6,23 @@ import {
 	Navbar,
 	TextInput,
 } from "flowbite-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { HiMoon, HiSun } from "react-icons/hi";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { HoverBorder } from "./extra/HoverBorder";
 import { signOutSuccess } from "../redux/user/userSlice";
+import { useEffect, useState } from "react";
 
 const Header = () => {
 	const path = useLocation().pathname;
 	const { currentUser } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state) => state.theme);
+	const [searchTerm, setSearchTerm] = useState("");
+	const location = useLocation();
+	const navigate = useNavigate();
 
 	const handleSignOut = async () => {
 		try {
@@ -37,6 +41,22 @@ const Header = () => {
 		}
 	};
 
+	useEffect(() => {
+		const urlParams = new URLSearchParams(location.search);
+		const searchTermFromURL = urlParams.get("searchTerm");
+		if (searchTermFromURL) {
+			setSearchTerm(searchTermFromURL);
+		}
+	}, [location.search]);
+
+	const handleSearchSubmit = (e) => {
+		e.preventDefault();
+		const urlParams = new URLSearchParams(location.search);
+		urlParams.set("searchTerm", searchTerm);
+		const searchQuery = urlParams.toString();
+		navigate(`/search?${searchQuery}`);
+	};
+
 	return (
 		<Navbar
 			className="border-b-2 border-teal-600 lg:px-14 bg-cover bg-center sticky top-0 z-20
@@ -47,22 +67,27 @@ const Header = () => {
 				<HoverBorder>{"Usman's"}</HoverBorder>
 				<span className="ml-1 text-xl sm:ml-2 sm:3xl">Blog</span>
 			</Link>
-			<form className={`header-search-form ${theme}`}>
+			<form
+				className={`header-search-form ${theme}`}
+				onSubmit={handleSearchSubmit}>
 				<TextInput
 					type="text"
 					placeholder="Search..."
 					rightIcon={AiOutlineSearch}
-					className="hidden lg:inline"></TextInput>
+					className="hidden lg:inline"
+					value={searchTerm}
+					onChange={(e) => setSearchTerm(e.target.value)}
+				/>
 			</form>
 			<Button
-				className="w-8 h-8 sm:w-10 sm:h-10 lg:hidden focus:ring-1 items-center"
+				className="w-8 h-8 sm:w-10 sm:h-10 lg:hidden focus:ring-1 items-center bg-transparent border-teal-400"
 				color="gray"
 				pill>
 				<AiOutlineSearch />
 			</Button>
 			<div className=" flex gap-2 md:order-2 items-center">
 				<Button
-					className="w-8 h-8 sm:w-10 sm:h-10 focus:ring-1 items-center"
+					className="w-8 h-8 sm:w-10 sm:h-10 focus:ring-1 items-center bg-transparent border-teal-400"
 					color="gray"
 					pill
 					onClick={() => dispatch(toggleTheme())}>
