@@ -57,7 +57,7 @@ const Header = () => {
 
 	return (
 		<Navbar
-			className="border-b-2 border-teal-600 lg:px-14 bg-cover bg-center sticky top-0 z-20
+			className="border-b-2 border-teal-600 lg:px-14 bg-cover bg-center sticky top-0 z-30
 			bg-[url('../../h&f-light.jpg')] dark:bg-[url('../../header-dark.jpg')]">
 			<Link
 				to="/"
@@ -95,7 +95,7 @@ const Header = () => {
 				</Button>
 				{currentUser ? (
 					<Dropdown
-						className={`z-20 ${theme}`}
+						className={`z-40 ${theme}`}
 						arrowIcon={false}
 						inline
 						label={
@@ -110,8 +110,12 @@ const Header = () => {
 								{currentUser.email}
 							</span>
 						</Dropdown.Header>
-						<Link to={"/dashboard?tab=profile"}>
+						<Link to={`/profile/${currentUser._id}?tab=user`}>
 							<Dropdown.Item>Profile</Dropdown.Item>
+						</Link>
+						<DropdownDivider />
+						<Link to={"/dashboard?tab=profile"}>
+							<Dropdown.Item>Dashboard</Dropdown.Item>
 						</Link>
 						<DropdownDivider />
 						<Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>

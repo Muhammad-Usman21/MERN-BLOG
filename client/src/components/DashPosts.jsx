@@ -39,7 +39,9 @@ const DashPosts = () => {
 	const handleShowMore = async () => {
 		const startIndex = posts.length;
 		try {
-			const res = await fetch(`/api/post/getPosts?startIndex=${startIndex}&limit=10`);
+			const res = await fetch(
+				`/api/post/getPosts?startIndex=${startIndex}&limit=10`
+			);
 			const data = await res.json();
 			if (res.ok) {
 				setPosts((prevPosts) => [...prevPosts, ...data.posts]);
@@ -132,12 +134,17 @@ const DashPosts = () => {
 										<Table.Cell>{post.numberOfLikes}</Table.Cell>
 										<Table.Cell>{post.category}</Table.Cell>
 										<Table.Cell>
-											<span
-												className={`text-gray-900 dark:text-gray-300 ${
-													currentUser._id === post.userId && "font-medium"
-												}`}>
-												{userDetails[post.userId]?.username}
-											</span>
+											<Link
+												to={`/profile/${
+													userDetails[post.userId]?._id
+												}?tab=user`}>
+												<span
+													className={`text-gray-900 dark:text-gray-300 ${
+														currentUser._id === post.userId && "font-medium"
+													}`}>
+													{userDetails[post.userId]?.username}
+												</span>
+											</Link>
 										</Table.Cell>
 									</Table.Row>
 								))}

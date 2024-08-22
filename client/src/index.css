@@ -142,7 +142,7 @@ nav[aria-label="Sidebar"].dark > div {
 }
 
 .header-search-form > div > div > div {
-	z-index: 30;
+	z-index: 40;
 }
 
 form input {

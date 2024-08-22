@@ -230,8 +230,8 @@ export const getUser = async (req, res, next) => {
 			return next(errorHandler("User not found!"));
 		}
 
-		const { username, profilePicture, isAdmin, ...restInfo } = user._doc;
-		res.status(200).json({ username, profilePicture, isAdmin });
+		const { password, email, ...restInfo } = user._doc;
+		res.status(200).json(restInfo);
 	} catch (error) {
 		next(error);
 	}

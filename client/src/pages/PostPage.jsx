@@ -147,7 +147,7 @@ const PostPage = () => {
 											alt=""
 										/>
 										<Link
-											to={"/dashboard?tab=profile"}
+											to={`/profile/${user?._id}?tab=user`}
 											className="text-cyan-600 hover:underline">
 											@{user?.username}
 										</Link>

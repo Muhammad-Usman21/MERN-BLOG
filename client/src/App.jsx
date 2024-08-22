@@ -15,6 +15,7 @@ import TicTacToe from "./pages/TicTacToe";
 import PostPage from "./pages/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
 import Search from "./pages/Search";
+import Profile from "./pages/Profile";
 
 const App = () => {
 	return (
@@ -28,6 +29,7 @@ const App = () => {
 				<Route path="/sign-in" element={<SignIn />} />
 				<Route element={<PrivateRoute />}>
 					<Route path="/dashboard" element={<Dashboard />} />
+					<Route path="/profile/:userId" element={<Profile />} />
 				</Route>
 				<Route element={<AdminPrivateRoute />}>
 					<Route path="/create-post" element={<CreatePost />} />

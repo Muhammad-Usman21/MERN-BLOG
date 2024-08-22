@@ -7,10 +7,12 @@ import DashUsers from "../components/DashUsers";
 import DashComments from "../components/DashComments";
 import DashboardComp from "../components/DashboardComp";
 import DashMyPosts from "../components/DashMyPosts";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
 	const location = useLocation();
 	const [tab, setTab] = useState("");
+	const { currentUser } = useSelector((state) => state.user);
 
 	useEffect(() => {
 		const urlParams = new URLSearchParams(location.search);
@@ -27,11 +29,11 @@ const Dashboard = () => {
 				<DashSidebar />
 			</div>
 			{tab === "profile" && <DashProfile />}
-			{tab === "myposts" && <DashMyPosts />}
-			{tab === "posts" && <DashPosts />}
-			{tab === "users" && <DashUsers />}
-			{tab === "comments" && <DashComments />}
-			{(tab === "dash" || !tab) && <DashboardComp />}
+			{currentUser.isAdmin && tab === "myposts" && <DashMyPosts />}
+			{currentUser.isAdmin && tab === "posts" && <DashPosts />}
+			{currentUser.isAdmin && tab === "users" && <DashUsers />}
+			{currentUser.isAdmin && tab === "comments" && <DashComments />}
+			{currentUser.isAdmin && (tab === "dash" || !tab) && <DashboardComp />}
 		</div>
 	);
 };

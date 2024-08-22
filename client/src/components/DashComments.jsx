@@ -197,12 +197,17 @@ const DashComments = () => {
 											</Link>
 										</Table.Cell>
 										<Table.Cell>
-											<span
-												className={`text-gray-900 dark:text-gray-300 ${
-													currentUser._id === comment.userId && "font-medium"
-												}`}>
-												{userDetails[comment.userId]?.username}
-											</span>
+											<Link
+												to={`/profile/${
+													userDetails[comment.userId]?._id
+												}?tab=user`}>
+												<span
+													className={`text-gray-900 dark:text-gray-300 ${
+														currentUser._id === comment.userId && "font-medium"
+													}`}>
+													{userDetails[comment.userId]?.username}
+												</span>
+											</Link>
 										</Table.Cell>
 										<Table.Cell>
 											<button

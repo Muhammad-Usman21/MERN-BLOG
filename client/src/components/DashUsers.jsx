@@ -13,6 +13,7 @@ import { FaCheck, FaTimes } from "react-icons/fa";
 import { MdCancelPresentation } from "react-icons/md";
 import { deleteUserSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 const DashUsers = () => {
 	const { currentUser } = useSelector((state) => state.user);
@@ -153,20 +154,24 @@ const DashUsers = () => {
 											/>
 										</Table.Cell>
 										<Table.Cell>
-											<span
-												className={`text-gray-900 dark:text-gray-300 ${
-													currentUser._id === user._id && "font-medium"
-												}`}>
-												{user.username}
-											</span>
+											<Link to={`/profile/${user?._id}?tab=user`}>
+												<span
+													className={`text-gray-900 dark:text-gray-300 ${
+														currentUser._id === user._id && "font-medium"
+													}`}>
+													{user.username}
+												</span>
+											</Link>
 										</Table.Cell>
 										<Table.Cell>
-											<span
-												className={`${
-													currentUser._id === user._id && "font-medium"
-												}`}>
-												{user.email}
-											</span>
+											<Link to={`/profile/${user?._id}?tab=user`}>
+												<span
+													className={`${
+														currentUser._id === user._id && "font-medium"
+													}`}>
+													{user.email}
+												</span>
+											</Link>
 										</Table.Cell>
 										<Table.Cell>
 											{user.isAdmin ? (
