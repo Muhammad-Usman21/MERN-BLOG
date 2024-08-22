@@ -188,83 +188,82 @@ const CommentSection = ({ postId }) => {
 							</Alert>
 						)}
 					</form>
+					{comments.length === 0 ? (
+						<p className="text-sm mt-7 mb-5 ml-3">No comments yet</p>
+					) : (
+						<>
+							<div className="text-sm mt-7 mb-5 flex items-center gap-1 ml-3">
+								<p>Comments</p>
+								<div className="border border-gray-400 py-1 px-2 rounded-sm">
+									<p>{comments.length}</p>
+								</div>
+							</div>
+							{comments.map((comment) => (
+								<Comment
+									key={comment._id}
+									comment={comment}
+									onLike={handleLike}
+									onEdit={handleEditSubmit}
+									onDelete={(commentId) => {
+										setShowModal(true);
+										setCommentToDelete(commentId);
+									}}
+								/>
+							))}
+
+							<Modal
+								className={`${theme}`}
+								show={showModal}
+								onClose={() => {
+									setShowModal(false);
+								}}
+								popup
+								size="lg">
+								<Modal.Header />
+								<Modal.Body>
+									<form
+										className={`flex flex-col text-center ${theme}`}
+										onSubmit={(e) => {
+											e.preventDefault();
+											handleDeleteSubmit(commentToDelete);
+										}}>
+										<div className="flex items-center mb-8 gap-8 self-center">
+											<HiOutlineExclamationCircle className="h-14 w-14 text-gray-500 dark:text-gray-200" />
+											<span className="text-2xl text-gray-600 dark:text-gray-200">
+												Delete Comment
+											</span>
+										</div>
+										<h3 className="my-5 text-lg text-gray-600 dark:text-gray-300">
+											Are you sure you want to delete this comment?
+										</h3>
+										<div className="flex justify-around">
+											<Button
+												type="submit"
+												color="failure"
+												className="focus:ring-1">
+												{"Yes, i'm sure"}
+											</Button>
+											<Button
+												type="button"
+												color="gray"
+												onClick={() => setShowModal(false)}
+												className="focus:ring-1 dark:text-gray-300">
+												No, cancel
+											</Button>
+										</div>
+									</form>
+								</Modal.Body>
+							</Modal>
+						</>
+					)}
 				</>
 			) : (
-				<div className="text-sm text-teal-500 my-3 flex gap-2 dark:text-gray-500 ml-3">
+				<div className="text-sm text-teal-500 my-5 flex gap-2 dark:text-gray-500 ml-3">
 					<p>You mush signed in to comment.</p>
 					<Link className="text-blue-500 hover:underline" to={"/sign-in"}>
 						Sign In
 					</Link>
 				</div>
-			)}
-
-			{comments.length === 0 ? (
-				<p className="text-sm mt-7 mb-5 ml-3">No comments yet</p>
-			) : (
-				<>
-					<div className="text-sm mt-7 mb-5 flex items-center gap-1 ml-3">
-						<p>Comments</p>
-						<div className="border border-gray-400 py-1 px-2 rounded-sm">
-							<p>{comments.length}</p>
-						</div>
-					</div>
-					{comments.map((comment) => (
-						<Comment
-							key={comment._id}
-							comment={comment}
-							onLike={handleLike}
-							onEdit={handleEditSubmit}
-							onDelete={(commentId) => {
-								setShowModal(true);
-								setCommentToDelete(commentId);
-							}}
-						/>
-					))}
-
-					<Modal
-						className={`${theme}`}
-						show={showModal}
-						onClose={() => {
-							setShowModal(false);
-						}}
-						popup
-						size="lg">
-						<Modal.Header />
-						<Modal.Body>
-							<form
-								className={`flex flex-col text-center ${theme}`}
-								onSubmit={(e) => {
-									e.preventDefault();
-									handleDeleteSubmit(commentToDelete);
-								}}>
-								<div className="flex items-center mb-8 gap-8 self-center">
-									<HiOutlineExclamationCircle className="h-14 w-14 text-gray-500 dark:text-gray-200" />
-									<span className="text-2xl text-gray-600 dark:text-gray-200">
-										Delete Comment
-									</span>
-								</div>
-								<h3 className="my-5 text-lg text-gray-600 dark:text-gray-300">
-									Are you sure you want to delete this comment?
-								</h3>
-								<div className="flex justify-around">
-									<Button
-										type="submit"
-										color="failure"
-										className="focus:ring-1">
-										{"Yes, i'm sure"}
-									</Button>
-									<Button
-										type="button"
-										color="gray"
-										onClick={() => setShowModal(false)}
-										className="focus:ring-1 dark:text-gray-300">
-										No, cancel
-									</Button>
-								</div>
-							</form>
-						</Modal.Body>
-					</Modal>
-				</>
 			)}
 		</div>
 	);

@@ -44,9 +44,7 @@ const Header = () => {
 	useEffect(() => {
 		const urlParams = new URLSearchParams(location.search);
 		const searchTermFromURL = urlParams.get("searchTerm");
-		if (searchTermFromURL) {
-			setSearchTerm(searchTermFromURL);
-		}
+		setSearchTerm(searchTermFromURL ? searchTermFromURL : "");
 	}, [location.search]);
 
 	const handleSearchSubmit = (e) => {
@@ -79,12 +77,14 @@ const Header = () => {
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
 			</form>
-			<Button
-				className="w-8 h-8 sm:w-10 sm:h-10 lg:hidden focus:ring-1 items-center bg-transparent border-teal-400"
-				color="gray"
-				pill>
-				<AiOutlineSearch />
-			</Button>
+			<Link to={"/search"}>
+				<Button
+					className="w-8 h-8 sm:w-10 sm:h-10 lg:hidden focus:ring-1 items-center bg-transparent border-teal-400"
+					color="gray"
+					pill>
+					<AiOutlineSearch />
+				</Button>
+			</Link>
 			<div className=" flex gap-2 md:order-2 items-center">
 				<Button
 					className="w-8 h-8 sm:w-10 sm:h-10 focus:ring-1 items-center bg-transparent border-teal-400"

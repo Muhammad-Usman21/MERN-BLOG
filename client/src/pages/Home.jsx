@@ -32,15 +32,19 @@ const Home = () => {
 				className="flex flex-col gap-6 px-10 p-28 max-w-5xl dark:shadow-whiteLg mx-4 sm:mx-7 md:mx-10 lg:mx-auto
 				    			bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 				<h1 className="text-3xl font-bold lg:text-6xl">Welcome to my Blog</h1>
-				<p className="text-gray-500 text-sm lg:text-base">
-					Here you will find a variety of articles and tutorials on topics such
-					as web developments, programming languages, and also on movies, animes
-					and netflix shows.
+				<p className="text-gray-500 text-sm lg:text-base text-justify">
+					Dive into a world where technology meets entertainment. Whether
+					you&apos;re passionate about programming, fascinated by the potential
+					of AI, or just love to discuss the latest movies, anime, and series,
+					this is the place for you. We bring together a diverse collection of
+					blogs covering everything from coding tips and AI breakthroughs to
+					reviews and deep dives into your favorite shows. Explore, learn, and
+					enjoy - there&apos;s something here for everyone!
 				</p>
 				<p>
 					<Link
 						to={"/search"}
-						className="text-sm md:text-base text-teal-400 dark:text-gray-400 font-bold hover:underline">
+						className="text-sm md:text-base font-semibold text-teal-400 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500">
 						View All
 					</Link>
 				</p>
@@ -62,7 +66,7 @@ const Home = () => {
 						<span className="text-center">
 							<Link
 								to={"/search"}
-								className="text-lg text-teal-400 dark:text-gray-400 ">
+								className="text-lg text-teal-400 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500">
 								View all Posts
 							</Link>
 						</span>

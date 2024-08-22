@@ -4,6 +4,7 @@ import {
 	create,
 	deletepost,
 	getposts,
+	postLikes,
 	updatepost,
 } from "../controllers/post.controller.js";
 
@@ -13,5 +14,6 @@ router.post("/create", verifyToken, create);
 router.get("/getposts", getposts);
 router.delete("/deletepost/:postId/:userId", verifyToken, deletepost);
 router.put("/updatepost/:postId/:userId", verifyToken, updatepost);
+router.put("/like-post/:postId", verifyToken, postLikes);
 
 export default router;

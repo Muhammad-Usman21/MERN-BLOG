@@ -25,7 +25,7 @@ const DashComments = () => {
 		setGetCommentsLoading(true);
 		const fetchComments = async () => {
 			try {
-				const res = await fetch(`/api/comment/get-comments`);
+				const res = await fetch(`/api/comment/get-comments?limit=10`);
 				const data = await res.json();
 				if (res.ok) {
 					setComments(data.comments);
@@ -49,12 +49,12 @@ const DashComments = () => {
 		const startIndex = comments.length;
 		try {
 			const res = await fetch(
-				`/api/comment/get-comments?startIndex=${startIndex}`
+				`/api/comment/get-comments?startIndex=${startIndex}&limit=10`
 			);
 			const data = await res.json();
 			if (res.ok) {
-				setComments((prevUsers) => [...prevUsers, ...data.users]);
-				if (data.posts.length < 10) {
+				setComments((prevComments) => [...prevComments, ...data.comments]);
+				if (data.comments.length < 10) {
 					setShowMore(false);
 				}
 			}
@@ -186,11 +186,23 @@ const DashComments = () => {
 										<Table.Cell>{comment.numberOfLikes}</Table.Cell>
 										<Table.Cell>
 											<Link to={`/post/${postDetails[comment.postId]?.slug}`}>
-												{postDetails[comment.postId]?.title}
+												<span
+													className={`text-gray-900 dark:text-gray-300 ${
+														currentUser._id ===
+															postDetails[comment.postId]?.userId &&
+														"font-medium"
+													}`}>
+													{postDetails[comment.postId]?.title}
+												</span>
 											</Link>
 										</Table.Cell>
 										<Table.Cell>
-											{userDetails[comment.userId]?.username}
+											<span
+												className={`text-gray-900 dark:text-gray-300 ${
+													currentUser._id === comment.userId && "font-medium"
+												}`}>
+												{userDetails[comment.userId]?.username}
+											</span>
 										</Table.Cell>
 										<Table.Cell>
 											<button
@@ -215,7 +227,7 @@ const DashComments = () => {
 							<div className="flex w-full">
 								<button
 									onClick={handleShowMore}
-									className="text-teal-500 dark:text-gray-400 mx-auto text-sm pb-4">
+									className="text-teal-400 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 mx-auto text-sm pb-4">
 									Show more
 								</button>
 							</div>

@@ -4,6 +4,9 @@ import { Link, useParams } from "react-router-dom";
 import CallToAction from "../components/CallToAction";
 import CommentSection from "../components/CommentSection";
 import PostCard from "../components/PostCard";
+import { useSelector } from "react-redux";
+import { IoHeartSharp } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const PostPage = () => {
 	const { postSlug } = useParams();
@@ -12,6 +15,9 @@ const PostPage = () => {
 	const [post, setPost] = useState(null);
 	const [imageLoaded, setImageLoaded] = useState(false);
 	const [recentPosts, setRecentPosts] = useState(null);
+	const { currentUser } = useSelector((state) => state.user);
+	const [user, setUser] = useState(null);
+	const navigate = useNavigate();
 
 	// console.log(post);
 
@@ -58,6 +64,52 @@ const PostPage = () => {
 		}
 	}, []);
 
+	useEffect(() => {
+		const fetchUser = async () => {
+			if (post) {
+				try {
+					const res = await fetch(`/api/user/${post.userId}`);
+					const data = await res.json();
+					if (!res.ok) {
+						console.log(data.message);
+						return;
+					}
+					if (res.ok) {
+						setUser(data);
+					}
+				} catch (error) {
+					console.log(error.message);
+				}
+			}
+		};
+
+		fetchUser();
+	}, [post]);
+
+	const onLike = async () => {
+		try {
+			if (!currentUser) {
+				navigate("/sign-in");
+				return;
+			}
+			const res = await fetch(`/api/post/like-post/${post._id}`, {
+				method: "PUT",
+			});
+			const data = await res.json();
+			if (res.ok) {
+				setPost((prevData) => ({
+					...prevData,
+					likes: data.likes,
+					numberOfLikes: data.numberOfLikes,
+				}));
+			} else {
+				console.log(data.message);
+			}
+		} catch (error) {
+			console.log(error.message);
+		}
+	};
+
 	return (
 		<div
 			className="min-h-screen py-20 bg-cover bg-center 
@@ -85,10 +137,47 @@ const PostPage = () => {
 								</Button>
 							</Link>
 
+							{currentUser && (
+								<div className="flex items-center justify-between max-w-2xl self-center w-full p-2 mt-3">
+									<div className="flex items-center gap-1 text-gray-500 text-sm">
+										<p>Post by:</p>
+										<img
+											className="h-8 w-8 object-cover rounded-full ml-1"
+											src={user?.profilePicture}
+											alt=""
+										/>
+										<Link
+											to={"/dashboard?tab=profile"}
+											className="text-cyan-600 hover:underline">
+											@{user?.username}
+										</Link>
+									</div>
+									<div className="flex gap-2 items-center">
+										<button
+											type="button"
+											onClick={() => onLike(post._id)}
+											className={`text-gray-400 hover:text-red-500 ${
+												currentUser &&
+												post.likes.includes(currentUser._id) &&
+												"!text-red-500"
+											}`}>
+											<IoHeartSharp className="text-3xl" />
+										</button>
+										{post.numberOfLikes > 0 && (
+											<p className="text-gray-400 text-sm">
+												{post.numberOfLikes +
+													" " +
+													(post.numberOfLikes === 1 ? "like" : "likes")}
+											</p>
+										)}
+									</div>
+								</div>
+							)}
+
 							<img
 								src={post.image}
 								alt={post.title}
-								className={`mt-10 p-3 max-h-full w-full object-cover ${
+								className={`mt-7 p-3 max-h-full w-full object-cover ${
 									!imageLoaded && "hidden"
 								}`}
 								onLoad={() => setImageLoaded(true)}

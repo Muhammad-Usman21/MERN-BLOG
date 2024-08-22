@@ -69,7 +69,7 @@ export const getposts = async (req, res, next) => {
 				],
 			}),
 		})
-			.sort({ updatedAt: sortDirection })
+			.sort({ createdAt: sortDirection })
 			.skip(startIndex)
 			.limit(limit);
 
@@ -82,7 +82,7 @@ export const getposts = async (req, res, next) => {
 			now.getDate()
 		);
 		const lastMonthPosts = await Post.countDocuments({
-			updatedAt: { $gte: oneMonthAgo },
+			createdAt: { $gte: oneMonthAgo },
 		});
 
 		res.status(200).json({
@@ -155,6 +155,27 @@ export const updatepost = async (req, res, next) => {
 			{ new: true }
 		);
 		res.status(200).json(updatedPost);
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const postLikes = async (req, res, next) => {
+	try {
+		const post = await Post.findById(req.params.postId);
+		if (!post) {
+			return next(errorHandler(404, "Post not found"));
+		}
+		const userIndex = post.likes.indexOf(req.user.id);
+		if (userIndex === -1) {
+			post.numberOfLikes += 1;
+			post.likes.push(req.user.id);
+		} else {
+			post.numberOfLikes -= 1;
+			post.likes.splice(userIndex, 1);
+		}
+		await post.save();
+		res.status(200).json(post);
 	} catch (error) {
 		next(error);
 	}

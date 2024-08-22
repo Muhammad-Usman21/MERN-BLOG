@@ -149,7 +149,7 @@ const Search = () => {
 						</div>
 					</div>
 					<Button
-						className="w-full lg:w-24 xl:w-28"
+						className="w-full lg:w-24 xl:w-28 focus:ring-1"
 						type="submit"
 						outline
 						gradientDuoTone="purpleToPink">

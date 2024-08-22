@@ -198,7 +198,7 @@ const DashboardComp = () => {
 							<Table.Head className="sticky top-[64px] md:top-[68px]">
 								<Table.HeadCell>Post Image</Table.HeadCell>
 								<Table.HeadCell>Post Title</Table.HeadCell>
-								<Table.HeadCell>Post Category</Table.HeadCell>
+								<Table.HeadCell>Likes</Table.HeadCell>
 							</Table.Head>
 							<Table.Body>
 								{posts.map((post) => (
@@ -211,7 +211,9 @@ const DashboardComp = () => {
 											/>
 										</Table.Cell>
 										<Table.Cell className="w-56">{post.title}</Table.Cell>
-										<Table.Cell className="w-40">{post.category}</Table.Cell>
+										<Table.Cell className="w-20">
+											{post.numberOfLikes}
+										</Table.Cell>
 									</Table.Row>
 								))}
 							</Table.Body>

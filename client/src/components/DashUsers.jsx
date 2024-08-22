@@ -31,7 +31,7 @@ const DashUsers = () => {
 		setGetUsersLoading(true);
 		const fetchUsers = async () => {
 			try {
-				const res = await fetch(`/api/user/getusers`);
+				const res = await fetch(`/api/user/getusers?limit=10`);
 				const data = await res.json();
 				if (res.ok) {
 					setUsers(data.users);
@@ -54,11 +54,13 @@ const DashUsers = () => {
 	const handleShowMore = async () => {
 		const startIndex = users.length;
 		try {
-			const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`);
+			const res = await fetch(
+				`/api/user/getusers?startIndex=${startIndex}&limit=10`
+			);
 			const data = await res.json();
 			if (res.ok) {
 				setUsers((prevUsers) => [...prevUsers, ...data.users]);
-				if (data.posts.length < 10) {
+				if (data.users.length < 10) {
 					setShowMore(false);
 				}
 			}
@@ -180,7 +182,7 @@ const DashUsers = () => {
 													setUserIdToDelete(user._id);
 												}}
 												className="font-medium text-red-500 hover:cursor-pointer
-                                                disabled:text-red-300 disabled:cursor-auto"
+                                                disabled:text-red-300 disabled:cursor-default"
 												disabled={user.isAdmin && currentUser._id !== user._id}>
 												Delete
 											</button>
@@ -193,7 +195,7 @@ const DashUsers = () => {
 							<div className="flex w-full">
 								<button
 									onClick={handleShowMore}
-									className="text-teal-500 dark:text-gray-400 mx-auto text-sm pb-4">
+									className="text-teal-400 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 mx-auto text-sm pb-4">
 									Show more
 								</button>
 							</div>
