@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "flowbite-react";
 import { useParams } from "react-router-dom";
 
@@ -10,6 +10,10 @@ const ProfileHeader = () => {
 	const [tab, setTab] = useState("");
 	const location = useLocation();
 	const [userData, setUserData] = useState(null);
+	const [totalPosts, setTotalPosts] = useState(0);
+	const [totalComments, setTotalComments] = useState(0);
+	const [totalLikes, setTotalLikes] = useState(0);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -38,6 +42,81 @@ const ProfileHeader = () => {
 		}
 	}, [location.search]);
 
+	useEffect(() => {
+		const fetchTotalPosts = async () => {
+			try {
+				const res = await fetch(`/api/post/getposts?userId=${userId}`);
+				const data = await res.json();
+				if (res.ok) {
+					setTotalPosts(data.totalPosts);
+				} else {
+					console.log(data.message);
+				}
+			} catch (error) {
+				console.log(error.message);
+			}
+		};
+		const fetchTotalComments = async () => {
+			try {
+				const res = await fetch(
+					`/api/comment/get-totalcomments?userId=${userId}`
+				);
+				const data = await res.json();
+				if (res.ok) {
+					setTotalComments(data);
+				} else {
+					console.log(data.message);
+				}
+			} catch (error) {
+				console.log(error.message);
+			}
+		};
+		const fetchTotalLikes = async () => {
+			try {
+				const res = await fetch(`/api/post/get-totalLikes/${userId}`);
+				const data = await res.json();
+				if (res.ok) {
+					setTotalLikes(data);
+				} else {
+					console.log(data.message);
+				}
+			} catch (error) {
+				console.log(error.message);
+			}
+		};
+
+		if (currentUser) {
+			fetchTotalPosts();
+		}
+		if (currentUser._id === userData?._id || currentUser.isAdmin) {
+			fetchTotalComments();
+			fetchTotalLikes();
+		}
+	}, [userId]);
+
+	const handleFollow = async () => {
+		try {
+			if (!currentUser) {
+				navigate("/sign-in");
+				return;
+			}
+			const res = await fetch(`/api/user/followUser/${userData?._id}`, {
+				method: "PUT",
+			});
+			const data = await res.json();
+			if (res.ok) {
+				setUserData((prevData) => ({
+					...prevData,
+					followers: data.followers,
+				}));
+			} else {
+				console.log(data.message);
+			}
+		} catch (error) {
+			console.log(error.message);
+		}
+	};
+
 	return (
 		<>
 			<div className="flex flex-col lg:flex-row justify-between items-center px-4 transition-all duration-300 gap-4 xl:sticky">
@@ -61,11 +140,14 @@ const ProfileHeader = () => {
 						</Link>
 						{currentUser._id !== userData?._id && (
 							<Button
+								onClick={handleFollow}
 								outline
 								gradientDuoTone="purpleToPink"
 								pill
 								className="w-full focus:ring-1">
-								Follow
+								{userData?.followers.includes(currentUser._id)
+									? "UnFollow"
+									: "Follow"}
 							</Button>
 						)}
 					</div>
@@ -86,7 +168,7 @@ const ProfileHeader = () => {
 										: "text-gray-700 dark:text-gray-300 hover:text-blue-400 dark:hover:text-blue-400"
 								}`}>
 								<span>Followers</span>
-								<span>34</span>
+								<span>{userData?.followers.length}</span>
 							</div>
 						</Link>
 						<Link
@@ -102,7 +184,7 @@ const ProfileHeader = () => {
 										: "text-gray-700 dark:text-gray-300 hover:text-blue-400 dark:hover:text-blue-400"
 								}`}>
 								<span>Followings</span>
-								<span>34</span>
+								<span>{userData?.followings.length}</span>
 							</div>
 						</Link>
 					</div>
@@ -120,7 +202,7 @@ const ProfileHeader = () => {
 										: "text-gray-700 dark:text-gray-300 hover:text-blue-400 dark:hover:text-blue-400"
 								}`}>
 								<span>Likes</span>
-								<span>34</span>
+								<span>{totalLikes}</span>
 							</div>
 						</Link>
 						<Link
@@ -136,7 +218,7 @@ const ProfileHeader = () => {
 										: "text-gray-700 dark:text-gray-300 hover:text-blue-400 dark:hover:text-blue-400"
 								}`}>
 								<span>Comments</span>
-								<span>34</span>
+								<span>{totalComments}</span>
 							</div>
 						</Link>
 					</div>
@@ -149,7 +231,7 @@ const ProfileHeader = () => {
 										: "text-gray-700 dark:text-gray-300 hover:text-blue-400 dark:hover:text-blue-400"
 								}`}>
 								<span>Posts</span>
-								<span>34</span>
+								<span>{totalPosts}</span>
 							</div>
 						</Link>
 					)}

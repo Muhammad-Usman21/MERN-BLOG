@@ -156,3 +156,14 @@ export const getComments = async (req, res, next) => {
 		next(error);
 	}
 };
+
+export const getTotalComments = async (req, res, next) => {
+	try {
+		const totalComments = await Comment.countDocuments(
+			req.query.userId ? { userId: req.query.userId } : {}
+		);
+		res.status(200).json(totalComments);
+	} catch (error) {
+		next(error);
+	}
+};
