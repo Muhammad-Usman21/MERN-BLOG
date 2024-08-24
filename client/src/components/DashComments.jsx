@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { MdCancelPresentation } from "react-icons/md";
-import { deleteUserSuccess } from "../redux/user/userSlice";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 const DashComments = () => {
@@ -17,7 +15,6 @@ const DashComments = () => {
 	const [getCommentsLoading, setGetCommentsLoading] = useState(false);
 	const [deleteCommentErrorMsg, setDeleteCommentErrorMsg] = useState(null);
 	const [deleteCommentSuccessMsg, setDeleteCommentSuccessMsg] = useState(null);
-	const dispatch = useDispatch();
 	const [postDetails, setPostDetails] = useState({});
 	const [userDetails, setUserDetails] = useState({});
 
@@ -71,7 +68,7 @@ const DashComments = () => {
 
 		try {
 			const res = await fetch(
-				`api/comment/delete-comment/${commentIdToDelete}`,
+				`/api/comment/delete-comment/${commentIdToDelete}`,
 				{
 					method: "DELETE",
 				}
@@ -79,14 +76,10 @@ const DashComments = () => {
 
 			const data = await res.json();
 			if (res.ok) {
-				if (currentUser._id === commentIdToDelete) {
-					dispatch(deleteUserSuccess(data));
-				} else {
-					setDeleteCommentSuccessMsg("Comment deleted successfully!");
-					setComments((prevComments) =>
-						prevComments.filter((comment) => comment._id !== commentIdToDelete)
-					);
-				}
+				setDeleteCommentSuccessMsg("Comment deleted successfully!");
+				setComments((prevComments) =>
+					prevComments.filter((comment) => comment._id !== commentIdToDelete)
+				);
 			} else {
 				setDeleteCommentErrorMsg(data.message);
 			}
@@ -117,7 +110,7 @@ const DashComments = () => {
 	const getCommentUser = async (userId) => {
 		if (!userDetails[userId]) {
 			try {
-				const res = await fetch(`/api/user/${userId}`);
+				const res = await fetch(`/api/user/getuser/${userId}`);
 				const data = await res.json();
 				if (res.ok) {
 					setUserDetails((prevState) => ({

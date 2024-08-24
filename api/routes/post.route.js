@@ -1,21 +1,35 @@
 import express from "express";
 import { verifyToken } from "../utils/verifyUser.js";
 import {
-	countLikesByUser,
-	create,
-	deletepost,
-	getposts,
+	countPostsLikedByUser,
+	createPost,
+	deletePost,
+	getPosts,
+	getPostsLikedByUser,
+	getPostsPublic,
 	postLikes,
-	updatepost,
+	countTotalPostsByUser,
+	updatePost,
 } from "../controllers/post.controller.js";
 
 const router = express.Router();
 
-router.post("/create", verifyToken, create);
-router.get("/getposts", getposts);
-router.delete("/deletepost/:postId/:userId", verifyToken, deletepost);
-router.put("/updatepost/:postId/:userId", verifyToken, updatepost);
+router.get("/getposts-public", getPostsPublic);
+router.post("/create-post", verifyToken, createPost);
+router.delete("/delete-post/:postId/:userId", verifyToken, deletePost);
+router.put("/update-post/:postId/:userId", verifyToken, updatePost);
+router.get("/getposts", verifyToken, getPosts);
 router.put("/like-post/:postId", verifyToken, postLikes);
-router.get("/get-totalLikes/:userId", countLikesByUser);
+router.get(
+	"/countTotalPostsByUser/:userId",
+	verifyToken,
+	countTotalPostsByUser
+);
+router.get("/getPostsLikedByUser", verifyToken, getPostsLikedByUser);
+router.get(
+	"/countPostsLikedByUser/:userId",
+	verifyToken,
+	countPostsLikedByUser
+);
 
 export default router;

@@ -154,7 +154,10 @@ const DashboardComp = () => {
                             bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 						<div className="flex justify-between p-3 text-sm font-semibold">
 							<h1 className="text-center p-2">Recent Users</h1>
-							<Button outline gradientDuoTone="purpleToBlue" className="w-24">
+							<Button
+								outline
+								gradientDuoTone="purpleToBlue"
+								className="w-24 focus:ring-1">
 								<Link to={"/dashboard?tab=users"}>Show all</Link>
 							</Button>
 						</div>
@@ -188,7 +191,10 @@ const DashboardComp = () => {
                             bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 						<div className="flex justify-between p-3 text-sm font-semibold">
 							<h1 className="text-center p-2">Recent Posts</h1>
-							<Button outline gradientDuoTone="purpleToBlue" className="w-24">
+							<Button
+								outline
+								gradientDuoTone="purpleToBlue"
+								className="w-24 focus:ring-1">
 								<Link to={"/dashboard?tab=posts"}>Show all</Link>
 							</Button>
 						</div>
@@ -226,7 +232,10 @@ const DashboardComp = () => {
                             bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 						<div className="flex justify-between p-3 text-sm font-semibold">
 							<h1 className="text-center p-2">Recent Comments</h1>
-							<Button outline gradientDuoTone="purpleToBlue" className="w-24">
+							<Button
+								outline
+								gradientDuoTone="purpleToBlue"
+								className="w-24 focus:ring-1">
 								<Link to={"/dashboard?tab=comments"}>Show all</Link>
 							</Button>
 						</div>

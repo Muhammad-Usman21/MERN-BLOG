@@ -51,7 +51,7 @@ const UpdatePost = () => {
 				}
 				if (res.ok) {
 					setGetPostLoading(false);
-					setFormData(data.posts[0]);
+					setFormData(data[0]);
 				}
 			};
 

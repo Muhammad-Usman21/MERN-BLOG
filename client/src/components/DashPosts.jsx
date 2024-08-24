@@ -40,7 +40,7 @@ const DashPosts = () => {
 		const startIndex = posts.length;
 		try {
 			const res = await fetch(
-				`/api/post/getPosts?startIndex=${startIndex}&limit=10`
+				`/api/post/getposts?startIndex=${startIndex}&limit=10`
 			);
 			const data = await res.json();
 			if (res.ok) {
@@ -57,7 +57,7 @@ const DashPosts = () => {
 	const getPostUser = async (userId) => {
 		if (!userDetails[userId]) {
 			try {
-				const res = await fetch(`/api/user/${userId}`);
+				const res = await fetch(`/api/user/getuser/${userId}`);
 				const data = await res.json();
 				if (res.ok) {
 					setUserDetails((prevState) => ({

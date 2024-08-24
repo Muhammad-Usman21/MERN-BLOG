@@ -26,7 +26,7 @@ const PostPage = () => {
 			try {
 				setLoading(true);
 				setErrorMsg(null);
-				const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
+				const res = await fetch(`/api/post/getposts-public?slug=${postSlug}`);
 				const data = await res.json();
 				if (!res.ok) {
 					setErrorMsg(data.message);
@@ -34,7 +34,7 @@ const PostPage = () => {
 					return;
 				}
 				if (res.ok) {
-					setPost(data.posts[0]);
+					setPost(data[0]);
 					setLoading(false);
 				}
 			} catch (error) {
@@ -49,10 +49,10 @@ const PostPage = () => {
 	useEffect(() => {
 		try {
 			const fetchRecentPosts = async () => {
-				const res = await fetch("/api/post/getposts?limit=3");
+				const res = await fetch("/api/post/getposts-public?limit=3");
 				const data = await res.json();
 				if (res.ok) {
-					setRecentPosts(data.posts);
+					setRecentPosts(data);
 				} else {
 					console.log(data.message);
 				}
@@ -68,7 +68,7 @@ const PostPage = () => {
 		const fetchUser = async () => {
 			if (post) {
 				try {
-					const res = await fetch(`/api/user/${post.userId}`);
+					const res = await fetch(`/api/user/getuser/${post.userId}`);
 					const data = await res.json();
 					if (!res.ok) {
 						console.log(data.message);
@@ -132,7 +132,7 @@ const PostPage = () => {
 							<Link
 								to={`/search?category=${post.category}`}
 								className="self-center mt-5">
-								<Button color="gray" pill size="xs">
+								<Button color="gray" pill size="xs" className="focus:ring-1">
 									{post.category}
 								</Button>
 							</Link>

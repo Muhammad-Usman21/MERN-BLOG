@@ -96,7 +96,7 @@ const CreatePost = () => {
 		}
 
 		try {
-			const res = await fetch("/api/post/create", {
+			const res = await fetch("/api/post/create-post", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

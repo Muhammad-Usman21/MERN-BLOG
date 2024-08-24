@@ -41,7 +41,7 @@ const DashMyPosts = () => {
 		const startIndex = userPosts.length;
 		try {
 			const res = await fetch(
-				`/api/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}&limit=10`
+				`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}&limit=10`
 			);
 			const data = await res.json();
 			if (res.ok) {

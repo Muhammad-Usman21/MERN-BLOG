@@ -1,7 +1,7 @@
 import Post from "../models/post.model.js";
 import { errorHandler } from "../utils/error.js";
 
-export const create = async (req, res, next) => {
+export const createPost = async (req, res, next) => {
 	if (!req.user.isAdmin) {
 		return next(errorHandler(403, "You are not allowed to create a post."));
 	}
@@ -48,7 +48,7 @@ export const create = async (req, res, next) => {
 	}
 };
 
-export const getposts = async (req, res, next) => {
+export const getPostsPublic = async (req, res, next) => {
 	try {
 		const startIndex = parseInt(req.query.startIndex) || 0;
 		const limit = parseInt(req.query.limit) || 9;
@@ -72,9 +72,41 @@ export const getposts = async (req, res, next) => {
 			.skip(startIndex)
 			.limit(limit);
 
-		const totalPosts = await Post.countDocuments(
-			req.query.userId ? { userId: req.query.userId } : {}
-		);
+		res.status(200).json(posts);
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const getPosts = async (req, res, next) => {
+	try {
+		if (!req.user.isAdmin) {
+			return next(errorHandler(403, "You cant get all info"));
+		}
+
+		const startIndex = parseInt(req.query.startIndex) || 0;
+		const limit = parseInt(req.query.limit) || 10;
+		const sortDirection = req.query.sort === "asc" ? 1 : -1;
+
+		const posts = await Post.find({
+			...(req.query.userId && { userId: req.query.userId }),
+			...(req.query.slug && { slug: req.query.slug }),
+			...(req.query.postId && { _id: req.query.postId }),
+			...(req.query.category && {
+				category: { $regex: req.query.category, $options: "i" },
+			}),
+			...(req.query.searchTerm && {
+				$or: [
+					{ title: { $regex: req.query.searchTerm, $options: "i" } },
+					{ content: { $regex: req.query.searchTerm, $options: "i" } },
+				],
+			}),
+		})
+			.sort({ createdAt: sortDirection })
+			.skip(startIndex)
+			.limit(limit);
+
+		const totalPosts = await Post.countDocuments();
 
 		const now = new Date();
 		const oneMonthAgo = new Date(
@@ -96,7 +128,7 @@ export const getposts = async (req, res, next) => {
 	}
 };
 
-export const deletepost = async (req, res, next) => {
+export const deletePost = async (req, res, next) => {
 	if (!req.user.isAdmin || req.user.id !== req.params.userId) {
 		return next(errorHandler("You are not allowed to delete this post"));
 	}
@@ -108,7 +140,7 @@ export const deletepost = async (req, res, next) => {
 	}
 };
 
-export const updatepost = async (req, res, next) => {
+export const updatePost = async (req, res, next) => {
 	if (!req.user.isAdmin || req.user.id !== req.params.userId) {
 		return next(errorHandler("You are not allowed to update this post"));
 	}
@@ -182,13 +214,46 @@ export const postLikes = async (req, res, next) => {
 	}
 };
 
-export const countLikesByUser = async (req, res, next) => {
+export const countTotalPostsByUser = async (req, res, next) => {
+	try {
+		const totalPostsByUser = await Post.countDocuments({
+			userId: req.params.userId,
+		});
+
+		res.status(200).json(totalPostsByUser);
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const countPostsLikedByUser = async (req, res, next) => {
 	try {
 		const userLikeCount = await Post.countDocuments({
 			likes: req.params.userId,
 		});
 
 		res.status(200).json(userLikeCount);
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const getPostsLikedByUser = async (req, res, next) => {
+	try {
+		if (!req.user.isAdmin && req.user.id !== req.params.userId) {
+			return next(errorHandler(400, "You cant see all posts liked by a user"));
+		}
+
+		const startIndex = parseInt(req.query.startIndex) || 0;
+		const limit = parseInt(req.query.limit) || 10;
+		const sortDirection = req.query.sort === "asc" ? 1 : -1;
+
+		const likedPosts = await Post.find({ likes: req.query.userId })
+			.sort({ createdAt: sortDirection })
+			.skip(startIndex)
+			.limit(limit);
+
+		res.status(200).json(likedPosts);
 	} catch (error) {
 		next(error);
 	}

@@ -15,6 +15,7 @@ const CommentSection = ({ postId }) => {
 	const { theme } = useSelector((state) => state.theme);
 	const [showModal, setShowModal] = useState(false);
 	const [commentToDelete, setCommentToDelete] = useState(null);
+	const [showMore, setShowMore] = useState(true);
 
 	const handleCommentSubmit = async (e) => {
 		e.preventDefault();
@@ -25,7 +26,7 @@ const CommentSection = ({ postId }) => {
 		}
 
 		try {
-			const res = await fetch("/api/comment/create", {
+			const res = await fetch("/api/comment/create-comment", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -51,10 +52,15 @@ const CommentSection = ({ postId }) => {
 	useEffect(() => {
 		const getComments = async () => {
 			try {
-				const res = await fetch(`/api/comment/get-comments/${postId}`);
+				const res = await fetch(
+					`/api/comment/get-postComments?postId=${postId}&limit=5`
+				);
 				const data = await res.json();
 				if (res.ok) {
 					setComments(data);
+					if (data.length < 5) {
+						setShowMore(false);
+					}
 				} else {
 					console.log(data.message);
 				}
@@ -65,6 +71,24 @@ const CommentSection = ({ postId }) => {
 
 		getComments();
 	}, [postId]);
+
+	const handleShowMore = async () => {
+		const startIndex = comments.length;
+		try {
+			const res = await fetch(
+				`/api/comment/get-postComments?postId=${postId}&startIndex=${startIndex}&limit=5`
+			);
+			const data = await res.json();
+			if (res.ok) {
+				setComments((prevComments) => [...prevComments, ...data]);
+				if (data.length < 5) {
+					setShowMore(false);
+				}
+			}
+		} catch (error) {
+			console.log(error.message);
+		}
+	};
 
 	const handleLike = async (commentId) => {
 		try {
@@ -210,6 +234,15 @@ const CommentSection = ({ postId }) => {
 									}}
 								/>
 							))}
+							{showMore && (
+								<div className="flex w-full my-3">
+									<button
+										onClick={handleShowMore}
+										className="text-teal-400 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 mx-auto text-sm pb-4">
+										Show more
+									</button>
+								</div>
+							)}
 
 							<Modal
 								className={`${theme}`}

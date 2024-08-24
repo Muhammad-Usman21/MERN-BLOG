@@ -4,7 +4,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "flowbite-react";
 import { useParams } from "react-router-dom";
 
-const ProfileHeader = () => {
+const ProfileHeader = ({
+	numberOfFollowers,
+	numberOfFollowings,
+	numberOfLikedPosts,
+	numberOfComments,
+}) => {
 	const { userId } = useParams();
 	const { currentUser } = useSelector((state) => state.user);
 	const [tab, setTab] = useState("");
@@ -18,7 +23,7 @@ const ProfileHeader = () => {
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
-				const res = await fetch(`/api/user/${userId}`);
+				const res = await fetch(`/api/user/getuser/${userId}`);
 				const data = await res.json();
 				if (res.ok) {
 					setUserData(data);
@@ -45,10 +50,10 @@ const ProfileHeader = () => {
 	useEffect(() => {
 		const fetchTotalPosts = async () => {
 			try {
-				const res = await fetch(`/api/post/getposts?userId=${userId}`);
+				const res = await fetch(`/api/post/countTotalPostsByUser/${userId}`);
 				const data = await res.json();
 				if (res.ok) {
-					setTotalPosts(data.totalPosts);
+					setTotalPosts(data);
 				} else {
 					console.log(data.message);
 				}
@@ -59,7 +64,7 @@ const ProfileHeader = () => {
 		const fetchTotalComments = async () => {
 			try {
 				const res = await fetch(
-					`/api/comment/get-totalcomments?userId=${userId}`
+					`/api/comment/countTotalCommentsByUser/${userId}`
 				);
 				const data = await res.json();
 				if (res.ok) {
@@ -73,7 +78,7 @@ const ProfileHeader = () => {
 		};
 		const fetchTotalLikes = async () => {
 			try {
-				const res = await fetch(`/api/post/get-totalLikes/${userId}`);
+				const res = await fetch(`/api/post/countPostsLikedByUser/${userId}`);
 				const data = await res.json();
 				if (res.ok) {
 					setTotalLikes(data);
@@ -107,7 +112,7 @@ const ProfileHeader = () => {
 			if (res.ok) {
 				setUserData((prevData) => ({
 					...prevData,
-					followers: data.followers,
+					followers: data.profileUser.followers,
 				}));
 			} else {
 				console.log(data.message);
@@ -119,7 +124,7 @@ const ProfileHeader = () => {
 
 	return (
 		<>
-			<div className="flex flex-col lg:flex-row justify-between items-center px-4 transition-all duration-300 gap-4 xl:sticky">
+			<div className="flex flex-col lg:flex-row justify-between items-center px-4 transition-all duration-300 gap-4">
 				<div className="flex lg:flex-row gap-4 items-center justify-center mb-4 lg:mb-0">
 					<Link to={`/profile/${userId}?tab=user`} className="group">
 						<img
@@ -168,7 +173,11 @@ const ProfileHeader = () => {
 										: "text-gray-700 dark:text-gray-300 hover:text-blue-400 dark:hover:text-blue-400"
 								}`}>
 								<span>Followers</span>
-								<span>{userData?.followers.length}</span>
+								<span>
+									{numberOfFollowers === null
+										? userData?.followers.length
+										: numberOfFollowers}
+								</span>
 							</div>
 						</Link>
 						<Link
@@ -184,7 +193,11 @@ const ProfileHeader = () => {
 										: "text-gray-700 dark:text-gray-300 hover:text-blue-400 dark:hover:text-blue-400"
 								}`}>
 								<span>Followings</span>
-								<span>{userData?.followings.length}</span>
+								<span>
+									{numberOfFollowings === null
+										? userData?.followings.length
+										: numberOfFollowings}
+								</span>
 							</div>
 						</Link>
 					</div>
@@ -202,7 +215,11 @@ const ProfileHeader = () => {
 										: "text-gray-700 dark:text-gray-300 hover:text-blue-400 dark:hover:text-blue-400"
 								}`}>
 								<span>Likes</span>
-								<span>{totalLikes}</span>
+								<span>
+									{numberOfLikedPosts === null
+										? totalLikes
+										: numberOfLikedPosts}
+								</span>
 							</div>
 						</Link>
 						<Link
@@ -218,7 +235,9 @@ const ProfileHeader = () => {
 										: "text-gray-700 dark:text-gray-300 hover:text-blue-400 dark:hover:text-blue-400"
 								}`}>
 								<span>Comments</span>
-								<span>{totalComments}</span>
+								<span>
+									{numberOfComments === null ? totalComments : numberOfComments}
+								</span>
 							</div>
 						</Link>
 					</div>

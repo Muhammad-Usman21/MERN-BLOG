@@ -249,17 +249,21 @@ export const followUsers = async (req, res, next) => {
 		const profileUserIndex = currentUser.followings.indexOf(profileUser._id);
 		if (currentUserIndex === -1 && profileUserIndex === -1) {
 			profileUser.followers.push(currentUser._id);
+			profileUser.numberOfFollowers += 1;
 			currentUser.followings.push(profileUser._id);
+			currentUser.numberOfFollowings += 1;
 		} else if (currentUserIndex >= 0 && profileUserIndex >= 0) {
 			profileUser.followers.splice(currentUserIndex, 1);
+			profileUser.numberOfFollowers -= 1;
 			currentUser.followings.splice(profileUserIndex, 1);
+			currentUser.numberOfFollowings -= 1;
 		} else {
 			return next(errorHandler(400, "Something went wrong!"));
 		}
 
 		await currentUser.save();
 		await profileUser.save();
-		res.status(200).json(profileUser);
+		res.status(200).json({ profileUser, selfUser: currentUser });
 	} catch (error) {
 		next(error);
 	}

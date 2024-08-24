@@ -197,6 +197,10 @@ form.dark textarea {
 	margin-bottom: 0.7rem;
 	text-align: justify;
 }
+.dark .post-content p > span,
+.dark .post-content p > em {
+	color: azure !important;
+}
 .post-content h1 {
 	font-size: 1.6rem;
 	font-weight: 600;

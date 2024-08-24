@@ -9,10 +9,10 @@ const Home = () => {
 	useEffect(() => {
 		try {
 			const fetchRecentPosts = async () => {
-				const res = await fetch("/api/post/getposts?limit=9");
+				const res = await fetch("/api/post/getposts-public?limit=9");
 				const data = await res.json();
 				if (res.ok) {
-					setRecentPosts(data.posts);
+					setRecentPosts(data);
 				} else {
 					console.log(data.message);
 				}

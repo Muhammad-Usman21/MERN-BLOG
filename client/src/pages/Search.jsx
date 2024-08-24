@@ -33,12 +33,12 @@ const Search = () => {
 			try {
 				setLoading(true);
 				const searchQuery = urlParams.toString();
-				const res = await fetch(`/api/post/getposts?${searchQuery}`);
+				const res = await fetch(`/api/post/getposts-public?${searchQuery}`);
 				const data = await res.json();
 				if (res.ok) {
-					setPosts(data.posts);
+					setPosts(data);
 					setLoading(false);
-					if (data.posts.length === 9) {
+					if (data?.length === 9) {
 						setShowMore(true);
 					} else {
 						setShowMore(false);
@@ -85,12 +85,12 @@ const Search = () => {
 			const urlParams = new URLSearchParams(location.search);
 			urlParams.set("startIndex", startIndex);
 			const searchQuery = urlParams.toString();
-			const res = await fetch(`/api/post/getposts?${searchQuery}`);
+			const res = await fetch(`/api/post/getposts-public?${searchQuery}`);
 			const data = await res.json();
 			if (res.ok) {
-				setPosts([...posts, ...data.posts]);
+				setPosts([...posts, ...data]);
 				setLoading(false);
-				if (data.posts.length === 9) {
+				if (data.length === 9) {
 					setShowMore(true);
 				} else {
 					setShowMore(false);

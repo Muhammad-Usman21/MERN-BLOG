@@ -30,9 +30,15 @@ export const createComment = async (req, res, next) => {
 
 export const getPostComments = async (req, res, next) => {
 	try {
-		const comments = await Comment.find({ postId: req.params.postId }).sort({
-			createdAt: -1,
-		});
+		const startIndex = parseInt(req.query.startIndex) || 0;
+		const limit = parseInt(req.query.limit) || 5;
+		const sortDirection = req.query.sort === "asc" ? 1 : -1;
+
+		const comments = await Comment.find({ postId: req.query.postId })
+			.sort({ updatedAt: sortDirection })
+			.skip(startIndex)
+			.limit(limit);
+
 		res.status(200).json(comments);
 	} catch (error) {
 		next(error);
@@ -134,7 +140,9 @@ export const getComments = async (req, res, next) => {
 		const limit = parseInt(req.query.limit) || 10;
 		const sortDirection = req.query.sort === "asc" ? 1 : -1;
 
-		const comments = await Comment.find()
+		const comments = await Comment.find(
+			req.query.userId ? { userId: req.query.userId } : {}
+		)
 			.sort({ updatedAt: sortDirection })
 			.skip(startIndex)
 			.limit(limit);
@@ -157,12 +165,35 @@ export const getComments = async (req, res, next) => {
 	}
 };
 
-export const getTotalComments = async (req, res, next) => {
+export const countTotalCommentsByUser = async (req, res, next) => {
 	try {
-		const totalComments = await Comment.countDocuments(
-			req.query.userId ? { userId: req.query.userId } : {}
-		);
+		const totalComments = await Comment.countDocuments({
+			userId: req.params.userId,
+		});
 		res.status(200).json(totalComments);
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const getAllCommentsByUser = async (req, res, next) => {
+	try {
+		if (!req.user.isAdmin && req.user.id !== req.query.userId) {
+			return next(
+				errorHandler(403, "You are not allowed to get all comments of a user")
+			);
+		}
+
+		const startIndex = parseInt(req.query.startIndex) || 0;
+		const limit = parseInt(req.query.limit) || 10;
+		const sortDirection = req.query.sort === "asc" ? 1 : -1;
+
+		const comments = await Comment.find({ userId: req.query.userId })
+			.sort({ updatedAt: sortDirection })
+			.skip(startIndex)
+			.limit(limit);
+
+		res.status(200).json(comments);
 	} catch (error) {
 		next(error);
 	}
