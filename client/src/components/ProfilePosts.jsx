@@ -11,6 +11,9 @@ const ProfilePosts = () => {
 	const [getPostsLoading, setGetPostsLoading] = useState(true);
 	const [userData, setUserData] = useState({});
 
+	// console.log(userPosts);
+	// console.log(userData);
+
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
@@ -35,12 +38,12 @@ const ProfilePosts = () => {
 			try {
 				if (userData) {
 					const res = await fetch(
-						`/api/post/getposts?userId=${userId}&limit=10`
+						`/api/post/getposts-public?userId=${userId}&limit=10`
 					);
 					const data = await res.json();
 					if (res.ok) {
-						setUserPosts(data.posts);
-						if (data.posts?.length < 10) {
+						setUserPosts(data);
+						if (data?.length < 10) {
 							setShowMore(false);
 						}
 						setGetPostsLoading(false);
@@ -61,12 +64,12 @@ const ProfilePosts = () => {
 		const startIndex = userPosts.length;
 		try {
 			const res = await fetch(
-				`/api/post/getposts?userId=${userId}&startIndex=${startIndex}&limit=10`
+				`/api/post/getposts-public?userId=${userId}&startIndex=${startIndex}&limit=10`
 			);
 			const data = await res.json();
 			if (res.ok) {
-				setUserPosts((prevPosts) => [...prevPosts, ...data.posts]);
-				if (data.posts.length < 10) {
+				setUserPosts((prevPosts) => [...prevPosts, ...data]);
+				if (data.length < 10) {
 					setShowMore(false);
 				}
 			}

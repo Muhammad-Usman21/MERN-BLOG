@@ -268,3 +268,30 @@ export const followUsers = async (req, res, next) => {
 		next(error);
 	}
 };
+
+export const removeFollowers = async (req, res, next) => {
+	try {
+		const currentUser = await User.findById(req.user.id);
+		const profileUser = await User.findById(req.params.userId);
+		if (!currentUser || !profileUser) {
+			return next(errorHandler(404, "User not found"));
+		}
+
+		const currentUserIndex = profileUser.followings.indexOf(currentUser._id);
+		const profileUserIndex = currentUser.followers.indexOf(profileUser._id);
+		if (currentUserIndex >= 0 && profileUserIndex >= 0) {
+			profileUser.followings.splice(currentUserIndex, 1);
+			profileUser.numberOfFollowings -= 1;
+			currentUser.followers.splice(profileUserIndex, 1);
+			currentUser.numberOfFollowers -= 1;
+		} else {
+			return next(errorHandler(400, "Something went wrong!"));
+		}
+
+		await currentUser.save();
+		await profileUser.save();
+		res.status(200).json({ profileUser, selfUser: currentUser });
+	} catch (error) {
+		next(error);
+	}
+};

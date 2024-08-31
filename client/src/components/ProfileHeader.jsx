@@ -92,11 +92,13 @@ const ProfileHeader = ({
 
 		if (currentUser) {
 			fetchTotalPosts();
-		}
-		if (currentUser._id === userData?._id || currentUser.isAdmin) {
 			fetchTotalComments();
 			fetchTotalLikes();
 		}
+		// if (currentUser._id === userData?._id || currentUser.isAdmin) {
+		// 	fetchTotalComments();
+		// 	fetchTotalLikes();
+		// }
 	}, [userId]);
 
 	const handleFollow = async () => {

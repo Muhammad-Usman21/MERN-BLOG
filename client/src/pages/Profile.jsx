@@ -70,7 +70,7 @@ const Profile = () => {
 				{tab === "comments" && (
 					<ProfileComments deleteComments={handleCommentsDelete} />
 				)}
-				{currentUser.isAdmin && tab === "posts" && <ProfilePosts />}
+				{tab === "posts" && <ProfilePosts />}
 			</div>
 		</div>
 	);
