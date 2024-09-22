@@ -108,7 +108,8 @@ const Search = () => {
 			className="min-h-screen w-full bg-cover bg-center py-4
 			bg-[url('../../bg2-light.jpg')] dark:bg-[url('../../post-dark.webp')]">
 			<div
-				className="p-4 lg:px-10 py-4 max-w-7xl dark:shadow-whiteLg mx-4 sm:mx-7 md:mx-10 lg:mx-auto lg:sticky top-[64px] md:top-[68px] z-10
+				// className="p-4 lg:px-10 py-4 max-w-7xl dark:shadow-whiteLg mx-4 sm:mx-7 md:mx-10 lg:mx-auto lg:sticky top-[64px] md:top-[68px] z-10
+				className="p-4 lg:px-10 py-4 max-w-7xl dark:shadow-whiteLg mx-4 sm:mx-7 md:mx-10 lg:mx-auto
 				    bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 				<form
 					onSubmit={handleSubmit}

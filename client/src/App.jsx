@@ -4,7 +4,6 @@ import About from "./pages/About";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Dashboard from "./pages/Dashboard";
-import Projects from "./pages/Projects";
 import Header from "./components/Header";
 import FooterComp from "./components/FooterComp";
 import PrivateRoute from "./components/PrivateRoute";
@@ -37,7 +36,6 @@ const App = () => {
 				</Route>
 				<Route path="/post/:postSlug" element={<PostPage />} />
 				<Route path="/search" element={<Search />} />
-				<Route path="/projects" element={<Projects />} />
 				<Route path="/tic-tac-toe" element={<TicTacToe />} />
 			</Routes>
 			<FooterComp />

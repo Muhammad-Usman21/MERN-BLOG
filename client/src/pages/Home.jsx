@@ -29,7 +29,7 @@ const Home = () => {
 			className="min-h-screen py-20 bg-cover bg-center 
 			bg-[url('../../bg2-light.jpg')] dark:bg-[url('../../post-dark.webp')]">
 			<div
-				className="flex flex-col gap-6 px-10 p-28 max-w-5xl dark:shadow-whiteLg mx-4 sm:mx-7 md:mx-10 lg:mx-auto
+				className="flex flex-col gap-6 px-10 p-28 max-w-5xl dark:shadow-whiteLg mx-4 sm:mx-7 md:mx-10 lg:mx-auto mb-20
 				    			bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">
 				<h1 className="text-3xl font-bold lg:text-6xl">Welcome to my Blog</h1>
 				<p className="text-gray-500 text-sm lg:text-base text-justify">
@@ -49,9 +49,9 @@ const Home = () => {
 					</Link>
 				</p>
 			</div>
-			<div className="my-12 mx-4">
+			{/* <div className="my-12 mx-4">
 				<CallToAction />
-			</div>
+			</div> */}
 			<div
 				className="mx-4 sm:mx-7 md:mx-10 p-3 flex flex-col gap-8 py-7 dark:shadow-whiteLg
 				    			bg-transparent border-2 border-white/40 dark:border-white/20 backdrop-blur-[9px] rounded-lg shadow-xl">

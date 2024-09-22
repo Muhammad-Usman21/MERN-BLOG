@@ -96,13 +96,33 @@ const FooterComp = () => {
 						year={new Date().getFullYear()}
 					/>
 					<div className="flex gap-4">
-						<Footer.Icon href="#" icon={BsFacebook} />
-						<Footer.Icon href="#" icon={BsInstagram} />
-						<Footer.Icon href="#" icon={BsTwitter} />
+						<Footer.Icon
+							href="#"
+							icon={BsFacebook}
+							className="hover:text-blue-500 dark:hover:text-blue-500"
+						/>
+						<Footer.Icon
+							href="#"
+							icon={BsInstagram}
+							className="hover:text-pink-500 dark:hover:text-pink-500"
+						/>
+						<Footer.Icon
+							href="#"
+							icon={BsTwitter}
+							className="hover:text-blue-500 dark:hover:text-blue-500"
+						/>
 						<Footer.Icon href="#" icon={BsTwitterX} />
-						<Footer.Icon href="#" icon={BsLinkedin} />
+						<Footer.Icon
+							href="#"
+							icon={BsLinkedin}
+							className="hover:text-blue-500 dark:hover:text-blue-500"
+						/>
 						<Footer.Icon href="#" icon={BsGithub} />
-						<Footer.Icon href="#" icon={BsDiscord} />
+						<Footer.Icon
+							href="#"
+							icon={BsDiscord}
+							className="hover:text-blue-500 dark:hover:text-blue-500"
+						/>
 					</div>
 				</div>
 			</div>
